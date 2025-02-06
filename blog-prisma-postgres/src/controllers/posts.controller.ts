@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as post_models from '../models/posts.models';
-import exp from "constants";
+import { postSchema } from "../middlewares/validation.middleware";
 
 
 export const getAllPosts = async (req: Request, res: Response) => {
@@ -23,9 +23,14 @@ export const getPost = async (req: Request, res: Response) => {
 }
 
 export const createPost = async (req: Request, res: Response) => {
-    const {title, body, authorId} = req.body
+   const validatePost = postSchema.safeParse(req.body);
+
+   if(!validatePost.success){
+    throw new Error(JSON.stringify(validatePost.error.format()))
+   }
+   
     try{
-    const create =  await post_models.createPost(title, body, authorId);
+    const create =  await post_models.createPost(validatePost.data);
     res.status(201).json({create});
     }catch(err){
         console.log(err)

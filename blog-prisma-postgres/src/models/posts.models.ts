@@ -1,22 +1,18 @@
 import prisma from "../config/db";
+import {postSchema, PostInput} from '../middlewares/validation.middleware'
 
 
 export const getAllPosts = async () => {
     return await prisma.post.findMany();
 }
 
-export const createPost = async (title: string, body: string, authorId: number) => {
-    return await prisma.post.create({
-        data: {
-            title, 
-            body,
-            author:{
-                connect:{
-                    id: authorId
-                }
-            }
-        }
-    })
+export const createPost = async (data: PostInput) => {
+    const validatePost = postSchema.safeParse(data);
+    if(!validatePost.success)
+    {
+        throw new Error(JSON.stringify(validatePost.error.format()))
+    }
+    return await prisma.post.create({data: validatePost.data})
 }
 
 export const getPost = async (id: number) => {

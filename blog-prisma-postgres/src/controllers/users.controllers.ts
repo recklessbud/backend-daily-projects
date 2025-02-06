@@ -1,5 +1,6 @@
 import * as users from '../models/users.models';
 import { Request, Response } from 'express';
+import { userSchema } from '../middlewares/validation.middleware';
 
 
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -26,9 +27,12 @@ export const getUsers = async (req: Request, res: Response) => {
 }
 
 export const createUsers = async (req: Request, res: Response) => {
-    const {username, password} = req.body
+  const validateUser = userSchema.safeParse(req.body);
+  if (!validateUser.success) {
+    throw new Error(JSON.stringify(validateUser.error.format()));
+  }
     try {
-        const create = await users.createUser(username, password);
+        const create = await users.createUser(validateUser.data);
     res.status(201).json({create});
     } catch (error) {
         console.error(error)

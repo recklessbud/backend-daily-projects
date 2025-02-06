@@ -1,5 +1,6 @@
 import exp from "constants";
 import prisma from "../config/db";
+import { userSchema, UserInput } from "../middlewares/validation.middleware";
 
 export const getAllUsers = async () =>{
     return await prisma.user.findMany({
@@ -10,12 +11,13 @@ export const getAllUsers = async () =>{
 }
 
 
-export const createUser = async(username: string, password: string) =>{
+export const createUser = async(data: UserInput) =>{
+  const validateUser =  userSchema.safeParse(data)
+ if (!validateUser.success) {
+   throw new Error(JSON.stringify(validateUser.error.format()))
+ }
   return await prisma.user.create({
-    data: {
-      username,
-      password
-    }
+    data: validateUser.data
   })  
 }
 

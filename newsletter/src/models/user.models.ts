@@ -16,8 +16,8 @@ export const emailSchema = new Schema<emails>({
     frequency: {type: String, enum: ['daily', 'weekly'], required: true},
     subscribeDate: {type: Date, default: Date.now},
 });
+ 
 
 
 
-
-export default mongoose.model<emails>('emails', emailSchema);
+export default mongoose.model<emails>('subscriber', emailSchema);

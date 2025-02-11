@@ -9,6 +9,7 @@ dotenv.config();
 //files
 import homeRoutes from "./routes/home.routes"
 import connectDB from './config/dbconn';
+import adminRoutes from "./routes/admin.routes"
 
 // const PORT = process.env.PORT || 3000;
 const app = express(); 
@@ -29,6 +30,7 @@ if(process.env.NODE_ENV === 'development') {
 } 
 
 app.use("/", homeRoutes)
+app.use("/admin", adminRoutes)	
 
 
 export default app;

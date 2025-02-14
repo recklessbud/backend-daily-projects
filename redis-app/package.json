@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . -c src/.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,10 @@
   "description": "",
   "dependencies": {
     "@eslint/js": "^9.20.0",
+    "@types/morgan": "^1.9.9",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "morgan": "^1.10.0",
     "nanoid": "^5.0.9",
     "redis": "^4.7.0",
     "zod": "^3.24.2"
@@ -28,6 +31,7 @@
     "eslint": "^9.20.1",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
 }

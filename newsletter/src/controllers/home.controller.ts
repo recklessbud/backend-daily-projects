@@ -25,7 +25,7 @@ export const subscribe = async (req: Request, res: Response) => {
                 <p>Thank you for subscribing to our newsletter!</p>`;
     await sendEEmail(email, "Welcome to our newsletter", text)
 
-     res.status(201).send("email subscribed successfully")
+     res.status(201).render("index", {message: "thanks for subscribing"})
     } catch (error) {
         console.log(error)
         res.status(500).send("something went wrong")

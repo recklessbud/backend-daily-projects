@@ -7,6 +7,8 @@ const router = Router();
 // router.post('/', validate(validateSchema.ValidateRestaurantSchema), restaurantController.createRestauran0t)
 
 router.post('/',validate(validateSchema.ValidateRestaurantSchema), restaurantController.createRestaurant)
+router.get('/:restaurantId', restaurantController.getRestaurant)
+
 export default router 
 
 

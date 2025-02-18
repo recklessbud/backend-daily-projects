@@ -19,12 +19,12 @@ export const ValidateRestaurantDetails = z.object({
     })
 })
 
-// export const ReviewSchema = z.object({
-//     review: z.string().min(2),
-//     ratings: z.number().min(1).max(5)
-// })
+export const Review = z.object({
+    review: z.string().min(2),
+    ratings: z.number().min(1).max(5)
+})
 
 
 export type RestaurantSchema = z.infer<typeof ValidateRestaurantSchema>;
 export type RestaurantDetailsSchema = z.infer<typeof ValidateRestaurantDetails>;
-// export type ReviewSchema = z.infer<typeof ReviewSchema>;
+export type ReviewSchema = z.infer<typeof Review>; 

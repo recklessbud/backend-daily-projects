@@ -5,10 +5,10 @@ import * as validateSchema from '../utils/validation.utils.ts'
 import { validate } from "../middleware/inputValidation.middleware.ts"; 
 import { initializeRedisClient } from "../utils/redisClient.ts";
 import { nanoid } from "nanoid";
-import { restaurantKeyById, reviewKeyById, reviewDetailsById } from "../utils/keys.ts";
+import { restaurantKeyById, reviewKeyById, reviewDetailsById, cuisineKeyById, cuisinesKey, restaurantCuisine } from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
-import { time } from "console";
-import { promise } from "zod";
+// import { time } from "console";
+// import { promise } from "zod";
 
 
 export const createRestaurant = async(req: Request, res: Response, next: NextFunction): Promise<void>  => {
@@ -18,8 +18,16 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
       const id =  nanoid();
       const restaurantKey: string = restaurantKeyById(id);
       const hashData = { id, name: body.name, location: body.location, };
-      const addData = await client.hSet(restaurantKey, hashData);
-      console.log(`added ${addData}`)
+      await Promise.all([
+       ...body.cuisines.map((cuisine)=> Promise.all([
+        client.sAdd(cuisinesKey, cuisine),
+        client.sAdd(restaurantCuisine(id), cuisine),
+        client.sAdd(cuisineKeyById(cuisine), id)
+       ])),
+       client.hSet(restaurantKey, hashData)  
+      
+      ]);
+      // console.log(`added ${addData}`)
       successResponse(res, hashData, "Success")
        return;
      } catch (error) {
@@ -45,11 +53,12 @@ export const getRestaurant = async(req: Request<{restaurantId: string}>, res: Re
     errorFunction(res, 404, "Restaurant not found")
     return
   }
-  const [viewCount, data] = await Promise.all([
+  const [viewCount, data, cuisines] = await Promise.all([
     client.hIncrBy(restaurantKey, "viewCount", 1),
-    client.hGetAll(restaurantKey)
+    client.hGetAll(restaurantKey),
+    client.sMembers(restaurantCuisine(restaurantId))
   ]) ;
- successResponse(res, data, "Success")
+ successResponse(res, {...data, cuisines})
  return 
  } catch (error) {
   next(error)

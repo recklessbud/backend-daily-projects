@@ -5,7 +5,7 @@ import * as validateSchema from '../utils/validation.utils.ts'
 import { validate } from "../middleware/inputValidation.middleware.ts"; 
 import { initializeRedisClient } from "../utils/redisClient.ts";
 import { nanoid } from "nanoid";
-import { restaurantKeyById, reviewKeyById, reviewDetailsById, cuisineKeyById, cuisinesKey, restaurantCuisine } from "../utils/keys.ts";
+import { restaurantKeyById, reviewKeyById, reviewDetailsById, cuisineKeyById, cuisinesKey, restaurantCuisine, restaurantsByRatingScore } from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
 // import { time } from "console";
 // import { promise } from "zod";
@@ -24,7 +24,11 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
         client.sAdd(restaurantCuisine(id), cuisine),
         client.sAdd(cuisineKeyById(cuisine), id)
        ])),
-       client.hSet(restaurantKey, hashData)  
+       client.hSet(restaurantKey, hashData),
+       client.zAdd(restaurantsByRatingScore, {
+        score: 0,
+        value: id
+       })
       
       ]);
       // console.log(`added ${addData}`)
@@ -75,17 +79,28 @@ export const reviews = async(req: Request<{restaurantId: string}>, res: Response
   try {
     const client = await initializeRedisClient();
     const reviewId = nanoid();
-    const reviewKey = reviewKeyById(restaurantId);
-    const ifExists = await client.exists(reviewKey);
+    const reviewKey = reviewKeyById(restaurantId); 
+    const restaurantKey = restaurantKeyById(restaurantId);
+    const ifExists = await client.exists(restaurantKey);
     if(!ifExists){
       errorFunction(res, 404, "Review already exists")
       return;
     }
     const reviewDetailsKey = reviewDetailsById(reviewId);
  const reviewData = {id: reviewId, ...data, timestamp: Date.now(), restaurantId}
-    await Promise.all([
+   const [reviewCount, setResults, totalStars] = await Promise.all([
       client.lPush(reviewKey, reviewId), 
-      client.hSet(reviewDetailsKey, reviewData)
+      client.hSet(reviewDetailsKey, reviewData),
+      client.hIncrByFloat(restaurantKey, "totalStars", data.ratings)
+    ])
+
+    const averageRating = Number((totalStars / reviewCount).toFixed(1));
+    await Promise.all([
+      client.zAdd(restaurantsByRatingScore, {
+        score: averageRating,
+        value: restaurantId
+      }),
+      client.hSet(restaurantKey, "averageRating", averageRating)
     ])
     successResponse(res, reviewData, "Success")
     return
@@ -132,6 +147,23 @@ export const deleteReview = async(req: Request<{restaurantId: string, reviewId: 
       errorFunction(res, 404, "Review not found")
     }
     successResponse(res, reviewId, "Success")
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export const getPagination = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const {page = 1, limit = 10} = req.query;
+  const start = (Number(page) -1) * Number(limit);
+  const end = start + Number(limit);
+  try {
+    const client = await initializeRedisClient();
+    const data = await client.zRange(restaurantsByRatingScore, start, end, {REV: true});
+    const restaurant = await Promise.all(
+      data.map((id) => client.hGetAll(restaurantKeyById(id)))
+    );
+    successResponse(res, restaurant, "Success")
   } catch (error) {
     next(error)
   }

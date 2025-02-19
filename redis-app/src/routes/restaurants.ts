@@ -5,7 +5,7 @@ import * as validateSchema from '../utils/validation.utils.ts'
 const router = Router();
 
 // router.post('/', validate(validateSchema.ValidateRestaurantSchema), restaurantController.createRestaurant)
-
+router.get('/', restaurantController.getPagination)	
 router.post('/',validate(validateSchema.ValidateRestaurantSchema), restaurantController.createRestaurant)
 router.get('/:restaurantId', restaurantController.getRestaurant)
 

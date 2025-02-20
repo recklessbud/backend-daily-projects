@@ -18,4 +18,4 @@ app.use('/cuisines', cuisinesRouter)
 
 
 app.use(errorHandlerMiddleware)
-export default app
+export default app   

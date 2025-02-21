@@ -15,7 +15,9 @@ import {
   restaurantCuisine,
   restaurantDetailsById ,
    restaurantsByRatingScore, 
-   resIndexKey} from "../utils/keys.ts";
+   resIndexKey,
+  bloomFilter
+  } from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
 import axios from "axios";
 import dotenv from "dotenv"
@@ -31,6 +33,12 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
       const client = await initializeRedisClient();
       const id =  nanoid();
       const restaurantKey: string = restaurantKeyById(id);
+      const bloomStrings = `${body.name} : ${body.location}`
+      const seenBefore = await client.bf.exists(bloomFilter, bloomStrings);
+      if(seenBefore){
+        errorFunction(res, 409, "Restaurant already exists")
+        return
+      }
       const hashData = { id, name: body.name, location: body.location, };
       await Promise.all([
        ...body.cuisines.map((cuisine)=> Promise.all([
@@ -42,7 +50,10 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
        client.zAdd(restaurantsByRatingScore, {
         score: 0,
         value: id
-       })
+       }),
+      //  client.bf.reserve(bloomFilter, 0.01, 10000),
+       client.bf.add(bloomFilter, bloomStrings),
+
       
       ]);
       // console.log(`added ${addData}`)

@@ -14,7 +14,8 @@ import {
   cuisinesKey, 
   restaurantCuisine,
   restaurantDetailsById ,
-   restaurantsByRatingScore } from "../utils/keys.ts";
+   restaurantsByRatingScore, 
+   resIndexKey} from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
 import axios from "axios";
 import dotenv from "dotenv"
@@ -76,7 +77,6 @@ export const getRestaurant = async(req: Request<{restaurantId: string}>, res: Re
     client.sMembers(restaurantCuisine(restaurantId))
   ]) ;
  successResponse(res, {...data, cuisines})
- return 
  } catch (error) {
   next(error)
  }
@@ -217,7 +217,7 @@ export const restaurantWeather = async(req: Request<{restaurantId: string}>, res
       successResponse(res, json);
       return
     }
-     errorFunction(res, 500, "Couldnt fetch weather info");
+     errorFunction(res, 500, "Could not fetch weather info");
     //  return
   }catch (error) {
     console.log(error)
@@ -300,4 +300,15 @@ export const getRestaurantDetails = async(req: Request<{restaurantId: string}>, 
   }catch (error) {
     next(error)
   }
+}
+
+export const getSearch = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+   const { q } = req.query;
+  try{
+  const client = await initializeRedisClient();
+  const results = await client.ft.search(resIndexKey, `@name:${q}`)
+   successResponse(res, results)
+   }catch(err){
+    next(err)
+   }
 }

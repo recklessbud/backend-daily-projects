@@ -15,6 +15,7 @@ router.delete('/:restaurantId/reviews/:reviewId', restaurantController.deleteRev
 router.delete('/:restaurantId', restaurantController.deleteRestaurant)
 router.post('/:restaurantId/details', validate(validateSchema.ValidateRestaurantDetails), restaurantController.createRestaurantDetails)
 router.get('/:restaurantId/details', restaurantController.getRestaurantDetails)
+router.get('/search/query', restaurantController.getSearch)
 
 export default router 
 

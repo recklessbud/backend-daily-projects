@@ -8,10 +8,11 @@ const router = Router();
 router.get('/', restaurantController.getPagination)	
 router.post('/',validate(validateSchema.ValidateRestaurantSchema), restaurantController.createRestaurant)
 router.get('/:restaurantId', restaurantController.getRestaurant)
-
+router.get('/:restaurantId/weather', restaurantController.restaurantWeather)
 router.post('/:restaurantId/reviews', validate(validateSchema.Review), restaurantController.reviews)
 router.get('/:restaurantId/reviews', restaurantController.getReviews)
 router.delete('/:restaurantId/reviews/:reviewId', restaurantController.deleteReview)
+router.delete('/:restaurantId', restaurantController.deleteRestaurant)
 
 export default router 
 

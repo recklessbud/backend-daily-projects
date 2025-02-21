@@ -31,5 +31,4 @@ export const getSingleCuisines = async(req:Request, res:Response, next: NextFunc
      successResponse(res, restaurants, "Success")
     } catch (error) {
         next(error)
-    }
-} 
+    }} 

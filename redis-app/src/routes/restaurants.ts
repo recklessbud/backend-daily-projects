@@ -13,6 +13,8 @@ router.post('/:restaurantId/reviews', validate(validateSchema.Review), restauran
 router.get('/:restaurantId/reviews', restaurantController.getReviews)
 router.delete('/:restaurantId/reviews/:reviewId', restaurantController.deleteReview)
 router.delete('/:restaurantId', restaurantController.deleteRestaurant)
+router.post('/:restaurantId/details', validate(validateSchema.ValidateRestaurantDetails), restaurantController.createRestaurantDetails)
+router.get('/:restaurantId/details', restaurantController.getRestaurantDetails)
 
 export default router 
 

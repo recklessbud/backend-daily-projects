@@ -5,7 +5,16 @@ import * as validateSchema from '../utils/validation.utils.ts'
 import { validate } from "../middleware/inputValidation.middleware.ts"; 
 import { initializeRedisClient } from "../utils/redisClient.ts";
 import { nanoid } from "nanoid";
-import { restaurantKeyById, reviewKeyById, reviewDetailsById, weatherKeyById , cuisineKeyById, cuisinesKey, restaurantCuisine, restaurantsByRatingScore } from "../utils/keys.ts";
+import { 
+  restaurantKeyById, 
+  reviewKeyById, 
+  reviewDetailsById, 
+  weatherKeyById , 
+  cuisineKeyById, 
+  cuisinesKey, 
+  restaurantCuisine,
+  restaurantDetailsById ,
+   restaurantsByRatingScore } from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
 import axios from "axios";
 import dotenv from "dotenv"
@@ -241,6 +250,53 @@ export const deleteRestaurant = async(req: Request<{restaurantId: string}>, res:
     errorFunction(res, 404, "restaurant not found")
   }
   successResponse(res, restaurantId, "Success")
+  }catch (error) {
+    next(error)
+  }
+}
+
+export const createRestaurantDetails = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  const data = req.body as validateSchema.RestaurantDetailsSchema
+  if(!restaurantId){
+    errorFunction(res, 400, "Invalid id")
+  }
+  try{
+  const client = await initializeRedisClient();
+  const restaurantDetailsKey = restaurantDetailsById(restaurantId);
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const ifExists = await client.exists(restaurantKey);
+  if(!ifExists){
+    errorFunction(res, 404, "restaurant not found")
+    return;
+  }
+  await client.json.set(restaurantDetailsKey, ".", data);
+   successResponse(res, {}, "details added successfully")
+  
+  }catch (error) {
+    next(error)
+  }
+}
+
+
+export const getRestaurantDetails = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  const data = req.body as validateSchema.RestaurantDetailsSchema
+  if(!restaurantId){
+    errorFunction(res, 400, "Invalid id")
+  }
+  try{
+  const client = await initializeRedisClient();
+  const restaurantDetailsKey = restaurantDetailsById(restaurantId);
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const ifExists = await client.exists(restaurantKey);
+  if(!ifExists){
+    errorFunction(res, 404, "restaurant not found")
+    return;
+  }
+ const details = await client.json.get(restaurantDetailsKey);
+   successResponse(res, details, "details retrieved successfully")
+  
   }catch (error) {
     next(error)
   }

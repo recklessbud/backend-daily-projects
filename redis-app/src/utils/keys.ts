@@ -13,3 +13,7 @@ export const cuisineKeyById = (name: string) => getKeyName('cuisines', name);
 export const restaurantCuisine = (id: string) => getKeyName('restaurant_cuisines', id);
 
 export const restaurantsByRatingScore = getKeyName("restaurants_by_rating")
+export const weatherKeyById = (id: string) => getKeyName('weather', id);
+export const restaurantDetailsById = (id: string) => getKeyName('restaurant_details', id);
+export const resIndexKey = getKeyName('idx', 'restaurants');
+export const bloomFilter = getKeyName('bloom_filter');

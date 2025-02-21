@@ -5,11 +5,27 @@ import * as validateSchema from '../utils/validation.utils.ts'
 import { validate } from "../middleware/inputValidation.middleware.ts"; 
 import { initializeRedisClient } from "../utils/redisClient.ts";
 import { nanoid } from "nanoid";
-import { restaurantKeyById, reviewKeyById, reviewDetailsById, cuisineKeyById, cuisinesKey, restaurantCuisine, restaurantsByRatingScore } from "../utils/keys.ts";
+import { 
+  restaurantKeyById, 
+  reviewKeyById, 
+  reviewDetailsById, 
+  weatherKeyById , 
+  cuisineKeyById, 
+  cuisinesKey, 
+  restaurantCuisine,
+  restaurantDetailsById ,
+   restaurantsByRatingScore, 
+   resIndexKey,
+  bloomFilter
+  } from "../utils/keys.ts";
 import { successResponse, errorFunction } from "../utils/responses.ts";
+import axios from "axios";
+import dotenv from "dotenv"
 // import { time } from "console";
 // import { promise } from "zod";
+dotenv.config()
 
+// console.log(process.env.API_KEY)
 
 export const createRestaurant = async(req: Request, res: Response, next: NextFunction): Promise<void>  => {
      const body = req.body as validateSchema.RestaurantSchema;
@@ -17,6 +33,12 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
       const client = await initializeRedisClient();
       const id =  nanoid();
       const restaurantKey: string = restaurantKeyById(id);
+      const bloomStrings = `${body.name} : ${body.location}`
+      const seenBefore = await client.bf.exists(bloomFilter, bloomStrings);
+      if(seenBefore){
+        errorFunction(res, 409, "Restaurant already exists")
+        return
+      }
       const hashData = { id, name: body.name, location: body.location, };
       await Promise.all([
        ...body.cuisines.map((cuisine)=> Promise.all([
@@ -28,7 +50,10 @@ export const createRestaurant = async(req: Request, res: Response, next: NextFun
        client.zAdd(restaurantsByRatingScore, {
         score: 0,
         value: id
-       })
+       }),
+      //  client.bf.reserve(bloomFilter, 0.01, 10000),
+       client.bf.add(bloomFilter, bloomStrings),
+
       
       ]);
       // console.log(`added ${addData}`)
@@ -63,7 +88,6 @@ export const getRestaurant = async(req: Request<{restaurantId: string}>, res: Re
     client.sMembers(restaurantCuisine(restaurantId))
   ]) ;
  successResponse(res, {...data, cuisines})
- return 
  } catch (error) {
   next(error)
  }
@@ -167,4 +191,135 @@ export const getPagination = async(req: Request, res: Response, next: NextFuncti
   } catch (error) {
     next(error)
   }
+}
+
+export const restaurantWeather = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  try {
+    const client = await initializeRedisClient();
+    const restaurantKey = restaurantKeyById(restaurantId);
+    const ifExists = await client.exists(restaurantKey);
+    if(!ifExists){
+      errorFunction(res, 404, "restaurant not found")
+      return;
+    }
+    const weatherKey = weatherKeyById(restaurantId);
+    const cachedWeather = await client.get(weatherKey);
+    if(cachedWeather){
+      console.log("Cache hit")
+      successResponse(res, JSON.parse(cachedWeather))
+      return;
+    }
+    const coords = await client.hGet(restaurantKey, "location")
+    if(!coords){
+     errorFunction(res, 404, "coordinates not found") 
+     return 
+    } 
+    const [lng,lat] = coords.split(",");
+    console.log(lng, lat)
+    const apiResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?units=imperial&lat=${lat?.trim()}&lon=${lng}&appid=${process.env.API_KEY}`
+    );
+    if (apiResponse.status === 200) {
+      const json = await apiResponse.json();
+      await client.set(weatherKey, JSON.stringify(json), {
+        EX: 60
+      });
+      successResponse(res, json);
+      return
+    }
+     errorFunction(res, 500, "Could not fetch weather info");
+    //  return
+  }catch (error) {
+    console.log(error)
+    next(error)
+  }
+} 
+
+export const deleteRestaurant = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  if(!restaurantId){
+    errorFunction(res, 400, "Invalid id")
+  }
+  try{
+  const client = await initializeRedisClient();
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const ifExists = await client.exists(restaurantKey);
+  if(!ifExists){
+    errorFunction(res, 404, "restaurant not found")
+    return;
+  }
+  const [removeResult, deleteResult] = await Promise.all([
+    client.del(restaurantKey),
+    client.del(restaurantCuisine(restaurantId)),
+    client.del(reviewKeyById(restaurantId)),
+    client.del(weatherKeyById(restaurantId)),
+    client.del(restaurantKeyById(restaurantId))
+
+  ])
+  if(removeResult === 0 && deleteResult === 0){
+    errorFunction(res, 404, "restaurant not found")
+  }
+  successResponse(res, restaurantId, "Success")
+  }catch (error) {
+    next(error)
+  }
+}
+
+export const createRestaurantDetails = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  const data = req.body as validateSchema.RestaurantDetailsSchema
+  if(!restaurantId){
+    errorFunction(res, 400, "Invalid id")
+  }
+  try{
+  const client = await initializeRedisClient();
+  const restaurantDetailsKey = restaurantDetailsById(restaurantId);
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const ifExists = await client.exists(restaurantKey);
+  if(!ifExists){
+    errorFunction(res, 404, "restaurant not found")
+    return;
+  }
+  await client.json.set(restaurantDetailsKey, ".", data);
+   successResponse(res, {}, "details added successfully")
+  
+  }catch (error) {
+    next(error)
+  }
+}
+
+
+export const getRestaurantDetails = async(req: Request<{restaurantId: string}>, res: Response, next: NextFunction): Promise<void> => {
+  const { restaurantId } = req.params;
+  const data = req.body as validateSchema.RestaurantDetailsSchema
+  if(!restaurantId){
+    errorFunction(res, 400, "Invalid id")
+  }
+  try{
+  const client = await initializeRedisClient();
+  const restaurantDetailsKey = restaurantDetailsById(restaurantId);
+  const restaurantKey = restaurantKeyById(restaurantId);
+  const ifExists = await client.exists(restaurantKey);
+  if(!ifExists){
+    errorFunction(res, 404, "restaurant not found")
+    return;
+  }
+ const details = await client.json.get(restaurantDetailsKey);
+   successResponse(res, details, "details retrieved successfully")
+  
+  }catch (error) {
+    next(error)
+  }
+}
+
+export const getSearch = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+   const { q } = req.query;
+  try{
+  const client = await initializeRedisClient();
+  const results = await client.ft.search(resIndexKey, `@name:${q}`)
+   successResponse(res, results)
+   }catch(err){
+    next(err)
+   }
 }

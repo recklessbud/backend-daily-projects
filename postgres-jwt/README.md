@@ -18,3 +18,8 @@ ts-node
 nodemon
 ejs
 express-async-errors
+prisma
+@prisma/client
+@prisma/adapter-pg
+pg
+@types/pg

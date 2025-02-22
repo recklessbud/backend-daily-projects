@@ -17,3 +17,4 @@ ts-node
 @types/cors
 nodemon
 ejs
+express-async-errors

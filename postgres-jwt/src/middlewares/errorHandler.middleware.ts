@@ -7,3 +7,4 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     console.log(err);
     errorResponse(res, 500).render('errors/500', { title: "500 - Internal Server Error", message: err.message });   
 }
+

@@ -2,12 +2,13 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path';
 const app = express();
 
 //files
 import { errorHandler } from './middlewares/errorHandler.middleware';
 import homeRoutes from './routes/home.routes';
-import path from 'path';
+import authRouter from './routes/auth.routes';
 
 
 
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use('/', homeRoutes);
+app.use('/auth', authRouter);
 
 //use errorHandler middleware
 app.use(errorHandler);

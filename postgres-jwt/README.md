@@ -23,3 +23,4 @@ prisma
 @prisma/adapter-pg
 pg
 @types/pg
+jsonwebtoken

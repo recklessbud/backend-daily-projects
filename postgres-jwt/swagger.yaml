@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+  description: API Documentation
+
+servers:
+  - url: http://localhost:4001
+
+paths:
+  /users/dashboard:
+    get:
+      summary: Dashboard
+      responses:
+        200:
+          description: Dashboard
+
+  /auth/login:
+    post:
+      summary: Log in the user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+      responses:
+        200:
+          description: Log in the user
+        401:
+          description: Invalid credentials
+        500:
+          description: Internal server error
+      

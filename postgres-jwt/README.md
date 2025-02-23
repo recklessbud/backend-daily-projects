@@ -24,3 +24,6 @@ prisma
 pg
 @types/pg
 jsonwebtoken
+swagger-ui-express
+yamljs
+cookieparser

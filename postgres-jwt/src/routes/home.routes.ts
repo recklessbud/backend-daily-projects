@@ -1,4 +1,6 @@
 import { Router } from "express";
+import yaml from "yamljs";
+import swaggerUi from "swagger-ui-express";
 import { getHomePage, error500Page, error404Page, error401Page, getDashboard } from "../controllers/home.controller";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
@@ -24,6 +26,12 @@ router.get("/errors/401", error401Page);
  //@route   GET /dashboard
 //desc     Get dashboard page
 router.get("/users/dashboard", authMiddleware, getDashboard);
+
+
+
+//@route   GET /docs
+//desc     Get docs page
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(yaml.load("./swagger.yaml")));
 
 
 

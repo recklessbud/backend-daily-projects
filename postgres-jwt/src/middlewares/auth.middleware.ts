@@ -19,40 +19,30 @@ declare module 'express-serve-static-core' {
     }
   }
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return errorResponse(res, 401).render("auth/login", { message: "Unauthorized" });
+    }
+
     try {
-        // Extract the token from cookies or headers
-        const token = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
-        // console.log(token);
-        if (!token) {
-           errorResponse(res, 401).render("auth/login", { message: "Unauthorized" });
-           return // Redirect if no token is found
+        const decodedToken = verifyRefreshToken(token) as { id: string; username: string };
+
+        const user = await prisma.user.findUnique({ where: { id: decodedToken.id } });
+
+        if (!user) {
+            return errorResponse(res, 401).redirect("/errors/401");
         }
 
-        // Verify token
-        const decoded = verifyRefreshToken(token) as { id: string; username: string };
-
-        // Check if user exists
-        const user = await prisma.user.findUnique({ where: { id: decoded.id } });
-        if (!user) {
-             errorResponse(res, 401).redirect("/errors/401")
-             return;
-        } 
- 
-        // Attach user info to request
         req.user = user;
-        
-        // Proceed to next middleware or route
+
         next();
     } catch (error) {
-        console.error("Authentication error:", error);
-
-        // Handle expired/invalid token error
         if (error instanceof jwt.JsonWebTokenError) {
-            errorResponse(res, 500).redirect("/errors/500");
-            return // Redirect to error page
+            return errorResponse(res, 500).redirect("/errors/500");
         }
 
-        next(error); // Pass other errors to the global error handler
+        next(error);
     }
 };
 

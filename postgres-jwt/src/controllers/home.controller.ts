@@ -29,6 +29,6 @@ export const error404Page = (req: Request, res: Response, next: NextFunction) =>
 
 export const getDashboard = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-  successResponse(res, 200).render('dashboard', { title: 'Dashboard', user: user });
+  successResponse(res, 200).render('users/dashboard', { title: 'Dashboard', user: user });
 
 }

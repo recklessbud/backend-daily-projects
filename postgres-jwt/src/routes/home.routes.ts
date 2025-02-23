@@ -10,20 +10,20 @@ router.get("/", getHomePage);
 
 //@route   GET /500
 //desc     Get 500 page
-router.get("/error/500", error500Page);
+router.get("/errors/500", error500Page);
 
 //@route   GET /404
 //desc     Get 401 page
-router.get("/error/404", error404Page);
+router.get("/errors/404", error404Page);
 
  //@route   GET /401
 //desc     Get 401 page
-router.get("/error/401", error401Page);
+router.get("/errors/401", error401Page);
 
 
  //@route   GET /dashboard
 //desc     Get dashboard page
-router.get("/dashboard", authMiddleware, getDashboard);
+router.get("/users/dashboard", authMiddleware, getDashboard);
 
 
 

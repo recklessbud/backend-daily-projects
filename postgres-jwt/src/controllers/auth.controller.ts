@@ -7,7 +7,7 @@ import prisma  from "../config/dbconn";
 import bcrypt from "bcryptjs";
 import { Login, Register } from "../utils/validation.utils";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/token.utils";
-import { access } from "fs";
+// import { access } from "fs";
 
 
 export const getLoginPage = (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
            maxAge: 7 * 24 * 60 * 60 * 1000
        })
        console.log(accessToken);
-       successResponse(res, 200).redirect('/dashboard');
+       successResponse(res, 200).redirect('/users/dashboard');
 
     }
 
@@ -149,5 +149,21 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    successResponse(res, 201).redirect('/dashboard');
+    successResponse(res, 201).redirect('/users/dashboard');
+}
+
+export const logout = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { refreshToken, accessToken } = req.cookies;
+    if(!refreshToken || !accessToken){
+        errorResponse(res, 401).render('users/dashboard', {title: 'Login', message: 'unauthorized'});
+    }
+    const token = await prisma.session.findUnique({ where: { token: refreshToken } });
+    if (!token) {
+        res.status(403).render("users/dashboard", { message: "Invalid refresh token" }) 
+        return
+    };
+    await prisma.session.delete({ where: { token: refreshToken } });
+    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
+    successResponse(res, 200).redirect('/auth/login');
 }

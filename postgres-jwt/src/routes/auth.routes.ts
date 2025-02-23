@@ -23,6 +23,10 @@ router.post("/register", Validation_Middleware.validate(registerSchema), Auth_Co
 //desc     Login user
 router.post("/login", Validation_Middleware.validate(loginSchema), Auth_Controller.loginUser);
 
+//@route   POST /auth/logout
+//desc     Logout user
+router.post("/logout", Auth_Controller.logout);
+
 
 
 

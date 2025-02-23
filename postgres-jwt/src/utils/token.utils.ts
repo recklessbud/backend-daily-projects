@@ -38,7 +38,7 @@ export const verifyAccessToken = (token: string) => {
   if (!process.env.ACCESS_TOKEN_SECRET) {
     throw new Error("ACCESS_TOKEN_SECRET is missing.");
   }
-  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
 };
 
 // Verify Refresh Token
@@ -46,5 +46,5 @@ export const verifyRefreshToken = (token: string) => {
   if (!process.env.REFRESH_TOKEN_SECRET) {
     throw new Error("REFRESH_TOKEN_SECRET is missing.");
   }
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET as string);
 };

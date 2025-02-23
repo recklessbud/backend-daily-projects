@@ -21,14 +21,15 @@ declare module 'express-serve-static-core' {
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Extract the token from cookies or headers
-        const token = req.cookies.accessToken || req.headers.authorization?.split(" ")[1];
+        const token = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
+        // console.log(token);
         if (!token) {
-           errorResponse(res, 401).json({ message: "Unauthorized" });
+           errorResponse(res, 401).render("auth/login", { message: "Unauthorized" });
            return // Redirect if no token is found
         }
 
         // Verify token
-        const decoded = verifyAccessToken(token) as JwtPayloadExtended;
+        const decoded = verifyRefreshToken(token) as { id: string; username: string };
 
         // Check if user exists
         const user = await prisma.user.findUnique({ where: { id: decoded.id } });

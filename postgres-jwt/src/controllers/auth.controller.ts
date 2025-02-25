@@ -26,6 +26,9 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         const user = await prisma.user.findUnique({
             where: {
                 username: body.username
+            },
+            include: {
+                role: true
             }
         })
         if(!user){
@@ -111,6 +114,9 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
     const existingUser = await prisma.user.findUnique({
       where: {
         username: body.username
+      }, 
+      include: {
+        role: true
       }
     })
     if(existingUser){
@@ -122,7 +128,12 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
       data: {
         username: body.username,
         email: body.email,
-        password: hashedPassword
+        password: hashedPassword,
+        role: {
+            connect: { 
+                name: 'USER'
+            }
+        }
       }
     })
     const accessToken = generateAccessToken({id: user.id, username: body.username});

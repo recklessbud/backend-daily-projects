@@ -5,6 +5,7 @@ import { errorResponse } from "../utils/responses.utils";
 import prisma from "../config/dbconn";
 import jwt from "jsonwebtoken";
 
+
 interface JwtPayloadExtended {
     id: string;
     username: string | null;
@@ -47,4 +48,27 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 };
 
 
+export const checkRole = (roles: string[])=>{
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: req.user?.id
+                }, 
+                include: {
+                    role: true
+                }
+            })
+            // console.log(user, user?.role);
+            if(!user || !roles.includes(user.role.name)){
+                return errorResponse(res, 403).render('errors/403', {title: '403 - Forbidden', message: 'Forbidden'});
+            }
+            next()
+        } catch (error) {
+            const err = error as Error;
+            console.log(err);
+            return errorResponse(res, 500).render('errors/500', {title: '500 - Internal Server Error', message: 'Internal Server Error'});
+        }
+    }
+}
 

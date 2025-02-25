@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { successResponse, errorResponse } from "../utils/responses.utils";
+import prisma from "../config/dbconn";
 // import { title } from "process";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,8 +28,16 @@ export const error404Page = (req: Request, res: Response, next: NextFunction) =>
 
 ; // Adjust the import path as necessary
 
-export const getDashboard = (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user;
+export const getDashboard = async(req: Request, res: Response, next: NextFunction) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req.user?.id
+        },
+        include: {
+            role: true
+        }
+    });
+    console.log(user);
   successResponse(res, 200).render('users/dashboard', { title: 'Dashboard', user: user });
 
 }

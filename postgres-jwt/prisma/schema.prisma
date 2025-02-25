@@ -14,6 +14,13 @@ datasource db {
 }
 
 
+model Role{
+  id String @id @default(uuid())
+  name String @unique
+  users User[]
+
+}
+
 
 model User {
   id String @id @default(uuid())
@@ -22,9 +29,10 @@ model User {
   password String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  roleId String  @default("user_role_id")
 
   sessions Session[]
-
+  role Role @relation(fields: [roleId], references: [id])
 }
 
 

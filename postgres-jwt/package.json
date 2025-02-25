@@ -7,8 +7,12 @@
     "dev": "nodemon",
     "lint": "eslint .",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "ts-node prisma/seeds/seed.ts"
   },
+  "prisma": {
+  "seed": "ts-node prisma/seeds/seed.ts"
+},
   "author": "",
   "license": "ISC",
   "description": "",

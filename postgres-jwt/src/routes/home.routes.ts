@@ -22,7 +22,9 @@ router.get("/errors/404", error404Page);
 //desc     Get 401 page
 router.get("/errors/401", error401Page);
 
-
+ //@route   GET /403
+//desc     Get 403 page
+ router.get('/errors/403', (req, res) => res.render('errors/403', { title: '403 - Forbidden', message: 'Forbidden' }));
  //@route   GET /dashboard
 //desc     Get dashboard page
 router.get("/users/dashboard", authMiddleware, getDashboard);

@@ -10,6 +10,7 @@ const app = express();
 import { errorHandler } from './middlewares/errorHandler.middleware';
 import homeRoutes from './routes/home.routes';
 import authRouter from './routes/auth.routes';
+import userRouter from './routes/users.routes';
 
 
 
@@ -28,6 +29,7 @@ app.use(morgan('dev'));
 // routes
 app.use('/', homeRoutes);
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 //use errorHandler middleware
 app.use(errorHandler);

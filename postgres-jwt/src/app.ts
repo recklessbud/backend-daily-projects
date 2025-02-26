@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import MethodOverride from 'method-override';
 const app = express();
 
 //files
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.set('views', path.join(__dirname, '../src/views'));
 app.use(express.static('public'));
 app.use(morgan('dev'));
+app.use(MethodOverride('_method'));
 
 
 

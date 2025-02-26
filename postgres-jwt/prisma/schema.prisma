@@ -13,29 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model Role{
-  id String @id @default(uuid())
-  name String @unique
-  users User[]
-
-}
-
-
-model User {
-  id String @id @default(uuid())
-  email String @unique
-  username String? @unique 
-  password String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  roleId String  @default("user_role_id")
-
-  sessions Session[]
-  role Role @relation(fields: [roleId], references: [id])
-}
-
-
 model Session{
   id String @id @default(uuid())
   userId     String
@@ -49,3 +26,89 @@ model Session{
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Role{
+  id String @id @default(uuid())
+  name String @unique
+  users User[] 
+
+}
+
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  username String? @unique 
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roleId String  @default("user_role_id")
+  departmentId String?
+  department Department? @relation(fields: [departmentId], references: [id])
+  sessions Session[]
+  role Role @relation(fields: [roleId], references: [id])
+  studentsProjects Project[] @relation("StudentProjects")
+  supervisorProjects Project[] @relation("SupervisorProjects")
+  schoolId String?
+  school School? @relation("SchoolUsers", fields: [schoolId], references: [id])
+}
+
+
+
+
+model School {
+  id String @id @default(uuid())
+  name String
+  faculties Faculty[]
+  users User[] @relation("SchoolUsers")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Faculty{
+  id String @id @default(uuid())
+  name String
+  schoolId String
+  school School @relation(fields: [schoolId], references: [id])
+  departments Department[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+
+
+model Department{
+  id String @id @default(uuid())
+  name String
+  facultyId String
+  faculties Faculty @relation(fields: [facultyId], references: [id])
+  users  User[]
+  projects Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectTopic{
+  id String @id @default(uuid())
+ title String
+
+projects Project[]
+}
+
+
+model Project{
+  id String @id @default(uuid())
+  title String
+  studentId String
+  student User @relation( "StudentProjects", fields: [studentId], references: [id])
+  topicId String?
+  topic ProjectTopic? @relation(fields: [topicId], references: [id])
+  comments String?
+  status String @default("pending")
+  supervisorId String
+  supervisor User? @relation("SupervisorProjects" ,fields: [supervisorId], references: [id])
+  createdAt DateTime @default(now())
+departmentId String?
+ departments Department? @relation(fields: [departmentId], references: [id])
+}

@@ -4,7 +4,8 @@ import bcrypt from "bcrypt"
 const prisma = new PrismaClient();
 
 async function main() {
-    const roles =["ADMIN", "USER", "MODERATOR"]
+    const roles =["ADMIN", "STUDENT", "SUPERVISOR", "SUPER_ADMIN"];
+ 
 
     for(const role of roles){
         await prisma.role.upsert({
@@ -16,6 +17,16 @@ async function main() {
                 name: role
             }
         })
+    }
+    const superAdminRole = await prisma.role.findUnique({
+        where: {
+            name: "SUPER_ADMIN"
+        }
+    })
+
+    if(!superAdminRole){
+    console.log("super admin role not found")
+    return
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -30,11 +41,7 @@ async function main() {
                 username: "bossman",
                 email: "admin12@gmail.com",
                 password: hashedPassword,
-                role: {
-                    connect: {
-                        name: "ADMIN"
-                    }
-                }
+                 roleId: superAdminRole.id
             }
         })
         console.log("user created")	
@@ -47,5 +54,8 @@ main()
  .catch((e) => {
     const err = e as Error;
     console.log("error occurred:", err)
+    process.exit(1)
  })
- .finally(()=> prisma.$disconnect())
+ .finally(async () => 
+    await prisma.$disconnect()
+)

@@ -131,7 +131,7 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         password: hashedPassword,
         role: {
             connect: { 
-                name: 'USER'
+                name: 'STUDENT'
             }
         }
       }

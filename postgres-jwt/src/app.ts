@@ -26,7 +26,7 @@ app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(MethodOverride('_method'));
 
-
+ 
 
 // routes
 app.use('/', homeRoutes);

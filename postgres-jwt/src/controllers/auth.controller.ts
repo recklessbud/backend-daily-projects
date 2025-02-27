@@ -6,6 +6,7 @@ import { errorResponse, successResponse } from "../utils/responses.utils";
 import prisma  from "../config/dbconn";
 import bcrypt from "bcryptjs";
 import { Login, Register } from "../utils/validation.utils";
+// import { roleMiddleware } from "../middlewares/auth.middleware";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/token.utils";
 // import { access } from "fs";
 
@@ -68,8 +69,19 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
            maxAge: 7 * 24 * 60 * 60 * 1000
        })
        console.log(accessToken);
-       successResponse(res, 200).redirect('/users/dashboard');
 
+       switch (user.role.name) {
+        case "SUPER_ADMIN":
+            return res.redirect("/users/superadmin");
+        case "ADMIN":
+            return res.redirect("/users/admin/dashboard");
+        case "SUPERVISOR":
+            return res.redirect("/users/supervisor/dashboard");
+        case "STUDENT":
+            return res.redirect("/users/student/dashboard");
+        default:
+            return res.redirect("/auth/login");
+        }
     }
 
     
@@ -160,21 +172,23 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    successResponse(res, 201).redirect('/users/dashboard');
+    req.session.id = user.id
+    successResponse(res, 302).redirect('/users/students/dashboard');
 }
 
 export const logout = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { refreshToken, accessToken } = req.cookies;
     if(!refreshToken || !accessToken){
-        errorResponse(res, 401).render('users/dashboard', {title: 'Login', message: 'unauthorized'});
+        errorResponse(res, 401).render('users/dashboard', {title: 'dashboard', message: 'unauthorized', user: req.user});
     }
     const token = await prisma.session.findUnique({ where: { token: refreshToken } });
     if (!token) {
-        res.status(403).render("users/dashboard", { message: "Invalid refresh token" }) 
+        res.status(403).render("users/dashboard", { message: "Invalid refresh token" , user: req.user}); 
         return
     };
     await prisma.session.delete({ where: { token: refreshToken } });
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
+    
     successResponse(res, 200).redirect('/auth/login');
 }

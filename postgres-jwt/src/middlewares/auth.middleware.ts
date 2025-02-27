@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from "express";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { verifyRefreshToken, verifyAccessToken } from "../utils/token.utils";
 import { errorResponse } from "../utils/responses.utils";
 import prisma from "../config/dbconn";
 import jwt from "jsonwebtoken";
+import { compareSync } from "bcryptjs";
 
 
 interface JwtPayloadExtended {
@@ -71,4 +73,5 @@ export const checkRole = (roles: string[])=>{
         }
     }
 }
+
 

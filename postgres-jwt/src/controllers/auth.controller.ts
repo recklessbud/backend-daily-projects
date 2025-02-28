@@ -78,7 +78,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         case "SUPERVISOR":
             return res.redirect("/users/supervisor/dashboard");
         case "STUDENT":
-            return res.redirect("/users/student/dashboard");
+            return res.redirect("/users/students/dashboard");
         default:
             return res.redirect("/auth/login");
         }
@@ -172,7 +172,7 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    req.session.id = user.id
+    // req.session.id = user.id
     successResponse(res, 302).redirect('/users/students/dashboard');
 }
 

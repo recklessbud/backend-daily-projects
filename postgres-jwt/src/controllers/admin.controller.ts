@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../config/dbconn";
 import { errorResponse, successResponse } from "../utils/responses.utils";
+import { title } from "process";
 
 
 
@@ -21,14 +22,21 @@ export const getAdminPage = async(req: Request, res: Response, next: NextFunctio
             email: true,
             role: true
         },
+        
     })
     successResponse(res, 200).render('users/admin/dashboard', {title: 'Admin', users: users, admin: admin});
 }
 
+// export const getStudentsAssignPage = (req:Request, res:Response)=>{
+//     successResponse(res, 200).render("users/admin/assignSupervisor", {title: "Assign supervisor"})
+// }
+// export const getUnassignedStudentsPage = (req:Request, res:Response)=>{
+//     successResponse(res, 200).render("users/admin/unassignedStudents", {title: "Unassigned Students"})
+// }
 export async function getEditPage(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { userId } = req.params;
     const user = await prisma.user.findUnique({
-        where: {
+        where: { 
             id: userId
         },
         include: {
@@ -221,25 +229,25 @@ export const deleteDepartment = async(req: Request, res: Response, next: NextFun
 }
 
 //supervisors
-export const assignSupervisor = async(req: Request, res: Response, next: NextFunction) => {
-    const { projectId } = req.params
-    const { supervisorId } = req.body
+//export const assignSupervisor = async(req: Request, res: Response, next: NextFunction) => {
+//     const { projectId } = req.params
+//     const { supervisorId } = req.body
 
-    const updatedSupervisor = await prisma.project.update({
-        where: {
-            id: projectId
-        },
-        data: {
-            supervisor: {
-                connect: {
-                    id:supervisorId
-                }
-            }
-        }
-    })
-    console.log(updatedSupervisor);
-    successResponse(res, 200).redirect('/users/admin/dashboard');
-}
+//     const updatedSupervisor = await prisma.project.update({
+//         where: {
+//             id: projectId
+//         },
+//         data: {
+//             supervisor: {
+//                 connect: {
+//                     id:supervisorId
+//                 }
+//             }
+//         }
+//     })
+//     console.log(updatedSupervisor);
+//     successResponse(res, 200).redirect('/users/admin/dashboard');
+// }
 
 //Projects
 export const getProjects = async(req: Request, res: Response, next: NextFunction) => {
@@ -253,4 +261,98 @@ export const getProjects = async(req: Request, res: Response, next: NextFunction
     })
     console.log(projects);
     successResponse(res, 200).render('projects/projects', {title: 'Projects', projects: projects});
+}
+
+export const getUnassignedStudents = async(req: Request, res: Response, next: NextFunction) => {
+    const { departmentId } = req.params
+    const students = await prisma.user.findMany({
+        where: {
+            departmentId: departmentId,
+            role: {
+                name: 'STUDENT'
+            },
+            supervisorId: null
+        },
+        select: {
+            id: true,
+            username: true,
+            email: true,
+            department: true,
+            role: true
+        }
+    })
+    successResponse(res, 200).render("users/admin/unassignedStudents", {title: "Unassigned Students", students: students});
+}
+
+
+export const getSupervisors = async(req: Request, res: Response, next: NextFunction) => {
+   const { departmentId } = req.params
+
+    const supervisors = await prisma.user.findMany({
+        where: {
+            departmentId: departmentId,
+            role: {
+                name: 'SUPERVISOR'
+            }
+        },
+       include: {
+          _count:{
+            select:{
+                students: true
+            }
+          }
+       }
+    })
+    successResponse(res, 200).json({supervisors: supervisors});
+}
+
+export const assignSupervisor = async(req: Request, res: Response, next: NextFunction) => {
+    const {studentId} = req.params
+    const {supervisorId} = req.body
+
+
+    const students = await prisma.user.update({
+        where: {
+            id: studentId,
+        },
+        data: {
+            supervisorId: supervisorId
+        },
+        include: {
+           supervisor: true, 
+           department: true
+        }
+    });
+
+    console.log(students);
+    successResponse(res, 200).redirect('/users/admin/dashboard');
+}
+
+export const getStudentAssignPage = async(req: Request, res: Response, next: NextFunction) => {
+    const { departmentId, studentId } = req.params
+    const student = await prisma.user.findUnique({
+        where: {
+            id: studentId,
+        },
+        include: {
+           department: true,
+            }
+    })
+
+    const supervisors = await prisma.user.findMany({
+        where:{
+            departmentId: student?.departmentId,
+            role:{
+                name: 'SUPERVISOR'
+            }
+        },
+        include:{
+            _count: {
+                select: {
+                    students: true
+                }
+            }
+        }
+    })
+    successResponse(res, 200).render('users/admin/assignSupervisor', {title: 'Assign Supervisor', student: student, supervisors: supervisors});
 }

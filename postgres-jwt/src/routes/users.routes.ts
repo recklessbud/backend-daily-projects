@@ -42,6 +42,20 @@ router.post('/admin/:schoolId/faculties/:facultyId/departments', authMiddleware,
 
 router.post('/admin/:schoolId/faculties/:facultyId/departments/delete/:departmentId', authMiddleware, checkRole(['ADMIN']), Admin.deleteDepartment);
  
+router.get('/admin/departments/:departmentId/unassigned-students', authMiddleware, checkRole(['ADMIN']), Admin.getUnassignedStudents);
+
+router.get('/admin/departments/:departmentId/supervisors', authMiddleware, checkRole(['ADMIN']), Admin.getSupervisors);
+
+router.get("/admin/students/:studentId/assign", authMiddleware, checkRole(['ADMIN']), Admin.getStudentAssignPage);
+
+router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADMIN']), Admin.assignSupervisor);
+
+
+
+
+
+
+
 //supervisors
  router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
 

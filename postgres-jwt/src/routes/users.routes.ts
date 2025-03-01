@@ -30,7 +30,7 @@ router.get('/admin/edit/:userId', authMiddleware, checkRole(['ADMIN']), Admin.ge
 
 router.post("/admin/update/:userId", authMiddleware, checkRole(['ADMIN']), Admin.updateUserRole);
 
-router.post("/admin/school", authMiddleware, Admin.createSchool)
+router.post("/admin/school", authMiddleware, checkRole(['ADMIN']),Admin.createSchool)
 
 router.post('/admin/delete/:schoolId', authMiddleware, checkRole(['ADMIN']), Admin.deleteSchool);
 
@@ -41,11 +41,11 @@ router.post('/admin/:schoolId/faculties/delete/:facultyId', authMiddleware, chec
 router.post('/admin/:schoolId/faculties/:facultyId/departments', authMiddleware, checkRole(['ADMIN']), Admin.createDepartment);
 
 router.post('/admin/:schoolId/faculties/:facultyId/departments/delete/:departmentId', authMiddleware, checkRole(['ADMIN']), Admin.deleteDepartment);
-
+ 
 //supervisors
  router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
 
-//students
+//students 
 router.get('/students/dashboard', authMiddleware, checkRole(['STUDENT']), Student.getStudentPage);
 
 

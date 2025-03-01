@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../config/dbconn";
 import { errorResponse, successResponse } from "../utils/responses.utils";
-import exp from "constants";
+
 
 
 export const getAdminPage = async(req: Request, res: Response, next: NextFunction) => {
@@ -68,15 +68,24 @@ export const updateUserRole = async(req: Request, res: Response, next: NextFunct
 export const createSchool = async(req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body
      if(name === "" || name === undefined){
-         errorResponse(res, 400).render('errors/400', {title: '400 - Bad Request', message: 'Bad Request'});
+         errorResponse(res, 400).json({message: 'School name is required'});
      } 
+     const existingSchool = await prisma.school.findFirst(
+        {
+            where: {name: name}
+    }
+    );
+    if(existingSchool){
+        errorResponse(res, 400).json({message: 'School already exists'});	
+        return;
+    }
   const school = await prisma.school.create({
     data: {
         name: name
     }
   })
   console.log(school)
-  successResponse(res, 201).redirect('/users/admin/dashboard');
+  successResponse(res, 201).json({message: 'School created successfully'});
 }
 export const updateSchool = async(req: Request, res: Response, next: NextFunction) => {
     const { schoolId } = req.params
@@ -102,12 +111,24 @@ export const deleteSchool = async(req: Request, res: Response, next: NextFunctio
     successResponse(res, 201).json({message: 'School deleted successfully'});
 }
 //faculties
-export const createFaculty = async(req: Request, res: Response, next: NextFunction) => {
+export const createFaculty = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { name } = req.body
     const { schoolId } = req.params
     if(name === "" || name === undefined){
-        errorResponse(res, 400).render('errors/400', {title: '400 - Bad Request', message: 'Bad Request'});
+        errorResponse(res, 400).json({message: 'Faculty name is required'});
     } 
+    const existingFaculty = await prisma.faculty.findFirst(
+        {
+            where: {
+                name: name,
+                schoolId: schoolId
+            }
+    }
+    );
+    if(existingFaculty){
+        errorResponse(res, 400).json({message: 'Faculty already exists'});	
+        return;
+    }
      const faculties = await prisma.faculty.create({
         data: {
             name: name,
@@ -119,7 +140,7 @@ export const createFaculty = async(req: Request, res: Response, next: NextFuncti
         },
      })
      console.log(faculties);
- successResponse(res, 201).redirect('/users/admin/dashboard');
+ successResponse(res, 201).json({message: 'Faculty created successfully'});
 }
 export const updateFaculty = async(req: Request, res: Response, next: NextFunction) => {
     const {name} = req.body
@@ -150,6 +171,21 @@ export const deleteFaculty = async(req: Request, res: Response, next: NextFuncti
 export const createDepartment = async(req: Request, res: Response, next: NextFunction) => {
     const { department } = req.body
     const { facultyId } = req.params
+    if(department === "" || department === undefined){
+        errorResponse(res, 400).json({message: 'Department name is required'});
+    }
+
+    const existingDepartment = await prisma.department.findFirst(
+        {
+            where: {
+                name: department,
+                facultyId: facultyId
+            }
+    })
+    if(existingDepartment){
+        errorResponse(res, 400).json({message: 'Department already exists'});
+        return;	
+    }
    const departments = await prisma.department.create({ 
     data: {
         name: department,
@@ -157,7 +193,7 @@ export const createDepartment = async(req: Request, res: Response, next: NextFun
     }
    })
    console.log(departments);
-   successResponse(res, 201).redirect('/users/admin/dashboard');
+   successResponse(res, 201).json({message: 'Department created successfully'});
 }
 export const updateDepartment = async(req: Request, res: Response, next: NextFunction) => {
     const {name} = req.body

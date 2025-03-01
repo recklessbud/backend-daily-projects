@@ -15,8 +15,17 @@ export const getLoginPage = (req: Request, res: Response) => {
     res.render('auth/login', {title: 'Login', message: ''});
 };
 
-export const getRegisterPage = (req: Request, res: Response) => {
-    res.render('auth/register', {title: 'Register', message: ''});
+export const getRegisterPage = async(req: Request, res: Response) => {
+    const schools = await prisma.school.findMany({
+        include: {
+            faculties: {
+                include: {
+                    departments: true
+                }
+            }
+        }
+    });
+    res.render('auth/register', {title: 'Register', message: '', schools: schools});
 };
 
 
@@ -128,14 +137,40 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         username: body.username
       }, 
       include: {
-        role: true
+        role: true,
       }
     })
     if(existingUser){
         errorResponse(res, 409).render('auth/register', {title: 'Register', message: 'User already exists. Please login.'});
         return;
     }
+      const school = await prisma.school.findUnique({
+        where: {
+            id: body.schoolId
+        },
+        include: {
+            faculties:{
+                where:{
+                    id: body.facultyId
+                },
+                include: {
+                    departments: {
+                        where: {
+                            id: body.departmentId
+                        }
+                    }
+                }
+            }
+        }
+      })
+      if (!school || !school.faculties.length || !school.faculties[0].departments.length) {
+        return errorResponse(res, 400).render('auth/register', {
+          title: 'Register', 
+          message: 'Invalid school, faculty or department selection'
+        });
+      }
     const hashedPassword = await bcrypt.hash(body.password, 10);
+
     const user = await prisma.user.create({
       data: {
         username: body.username,
@@ -144,6 +179,21 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         role: {
             connect: { 
                 name: 'STUDENT'
+            }
+        }, 
+        school: {
+            connect: {
+                id: body.schoolId
+            }
+        }, 
+        faculty: {
+            connect: {
+                id: body.facultyId
+            }
+        }, 
+        department: {
+            connect: {
+                id: body.departmentId
             }
         }
       }

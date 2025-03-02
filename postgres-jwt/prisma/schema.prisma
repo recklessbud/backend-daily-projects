@@ -52,6 +52,7 @@ model User {
   supervisorProjects Project[] @relation("SupervisorProjects")
   schoolId String?
   supervisorId String?
+  studentsTopic ProjectTopic[] @relation("StudentsTopic")
   supervisor User? @relation("SuperVisorStudents", fields: [supervisorId], references: [id])
   students User[] @relation("SuperVisorStudents")
   school School? @relation("SchoolUsers", fields: [schoolId], references: [id])
@@ -98,6 +99,11 @@ model Department{
 model ProjectTopic{
   id String @id @default(uuid())
  title String
+ status String @default("PENDING")
+ studentId String?
+ student User? @relation("StudentsTopic", fields: [studentId], references: [id])
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
 
 projects Project[]
 }
@@ -105,14 +111,16 @@ projects Project[]
 
 model Project{
   id String @id @default(uuid())
-  title String
+  fileUrl String
+  fileName String
+  fileKey String
   studentId String
   student User @relation( "StudentProjects", fields: [studentId], references: [id])
   topicId String?
   topic ProjectTopic? @relation(fields: [topicId], references: [id])
   comments String?
-  status String @default("pending")
-  supervisorId String
+  status String @default("PENDING")
+  supervisorId String?
   supervisor User? @relation("SupervisorProjects" ,fields: [supervisorId], references: [id])
   createdAt DateTime @default(now())
 departmentId String?

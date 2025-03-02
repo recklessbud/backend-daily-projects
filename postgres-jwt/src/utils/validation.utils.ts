@@ -1,3 +1,4 @@
+// import { title } from "process";
 import { z } from "zod";
 
 export const loginSchema = z.object({
@@ -15,6 +16,10 @@ export const registerSchema = z.object({
     departmentId: z.string(),
 })
 
+export const projectTopicSchema = z.object({
+    title: z.string(),
+})
 
 export type Login = z.infer<typeof loginSchema>;
 export type Register = z.infer<typeof registerSchema>;
+export type ProjectTopic = z.infer<typeof projectTopicSchema>;

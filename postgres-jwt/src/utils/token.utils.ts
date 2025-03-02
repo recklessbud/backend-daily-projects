@@ -7,7 +7,7 @@ interface Payload {
   id: string;
   username: string;
 }
-console.log(process.env.ACCESS_TOKEN_SECRET);
+// console.log(process.env.ACCESS_TOKEN_SECRET);
 
 // Generate Access Token
 export const generateAccessToken = (user: Payload) => {

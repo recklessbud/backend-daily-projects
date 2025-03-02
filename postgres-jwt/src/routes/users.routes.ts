@@ -8,6 +8,7 @@ import { getAllUsers, getEditUserPage, updateUserRole } from "../controllers/sup
 import * as Admin from "../controllers/admin.controller";
 import * as Student from "../controllers/students.controller"
 import * as Supervisor from "../controllers/supervisor.controller"
+import { upload } from "../config/multer.config";
 
 const router = express.Router();
 
@@ -61,6 +62,24 @@ router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADM
 
 //students 
 router.get('/students/dashboard', authMiddleware, checkRole(['STUDENT']), Student.getStudentPage);
+
+router.post('/students/project-topic', authMiddleware, checkRole(['STUDENT']), Student.createProjectTopic);
+
+router.post('/students/project-topic/:projectTopicId/delete', authMiddleware, checkRole(['STUDENT']), Student.deleteProjectTopic);
+
+router.post('/students/project-topic/:projectTopicId/update', authMiddleware, checkRole(['STUDENT']), Student.updateProjectTopic);
+
+router.post("/students/projects/upload", authMiddleware, checkRole(['STUDENT']), upload.single('file'), Student.createProjects);
+
+
+
+
+
+
+
+
+
+
 
 
 

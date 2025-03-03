@@ -58,8 +58,14 @@ router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADM
 
 
 //supervisors
- router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
+//  router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
 
+ router.get('/supervisor/students', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getAssignedStudents);
+
+
+
+
+ 
 //students 
 router.get('/students/dashboard', authMiddleware, checkRole(['STUDENT']), Student.getStudentPage);
 

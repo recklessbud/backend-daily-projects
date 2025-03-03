@@ -151,3 +151,28 @@ export const rejectProjects = async (req: Request, res: Response) => {
 }
 
 
+
+
+export const getAssignedStudents = async (req: Request, res: Response) => {
+    const students = await prisma.user.findMany({
+        where:{
+            supervisorId: req.user?.id,
+            role: {
+                name: 'STUDENT'
+            }
+        },
+        include: {
+            department: true,
+            studentsProjects: true,
+            studentsTopic: {
+                where: {
+                    status: {
+                        in: ['PENDING', 'APPROVED']
+                    }
+                }   
+            },
+
+        }
+    })
+    successResponse(res, 200).json(students);
+}

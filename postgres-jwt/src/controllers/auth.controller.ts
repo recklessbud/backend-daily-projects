@@ -84,8 +84,8 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             return res.redirect("/users/superadmin");
         case "ADMIN":
             return res.redirect("/users/admin/dashboard");
-        case "SUPERVISOR":
-            return res.redirect("/users/supervisor/dashboard");
+        case "SUPERVISOR": 
+            return res.redirect("/users/supervisor/students");
         case "STUDENT":
             return res.redirect("/users/students/dashboard");
         default:
@@ -230,6 +230,7 @@ export const logout = async(req: Request, res: Response, next: NextFunction): Pr
     const { refreshToken, accessToken } = req.cookies;
     if(!refreshToken || !accessToken){
         errorResponse(res, 401).render('users/dashboard', {title: 'dashboard', message: 'unauthorized', user: req.user});
+        return
     }
     const token = await prisma.session.findUnique({ where: { token: refreshToken } });
     if (!token) {

@@ -161,7 +161,8 @@ export const createProjects = async(req: Request, res: Response) => {
             where: {
                 status: 'PENDING' //change to approved later
             }
-        }
+        },
+        studentsProjects: true
     }
  })
 
@@ -172,6 +173,10 @@ export const createProjects = async(req: Request, res: Response) => {
 
 if (student.studentsTopic.length === 0) {
     errorResponse(res, 400).json({message: 'You must have an approved project topic before uploading project files'});
+    return
+}
+if(student.studentsProjects.length > 0){
+    errorResponse(res, 400).json({message: 'You have already uploaded a project file'});
     return
 }
 
@@ -200,4 +205,52 @@ const project = await prisma.project.create({
 })
 successResponse(res, 201).json({message: 'Project created successfully', project: project});
 
+}
+
+
+export const deleteProjectFile = async(req: Request, res: Response) => {
+    const { projectId } = req.params
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req.user?.id,
+            role: {
+                name: "STUDENT"
+            }
+        },
+        include: {
+            studentsProjects: {
+                where: {
+                    id: projectId,
+                    status: 'PENDING'	
+                }
+            }
+        }
+    })
+
+    if(!user){
+        errorResponse(res, 404).json({message: 'User not found'});
+        return
+    }
+
+    if(user.studentsProjects.length === 0){
+        errorResponse(res, 404).json({message: 'Project not found'});
+        return
+    }
+
+    // if(user.studentsProjects[0].status !== 'PENDING'){
+    //     errorResponse(res, 404).json({message: 'You can only delete a pending project file'});
+    //     return
+    // }
+    
+    const project = user.studentsProjects[0];
+ // Use transaction to ensure both S3 and database operations succeed
+  const deleteProject =  await prisma.$transaction(async (tx) =>{
+        await deleteFile(project.fileKey);
+        await tx.project.delete({
+            where: {
+                id: projectId
+            }
+        })
+    })
+    successResponse(res, 200).json({message: 'Project file deleted successfully', deleteProject: deleteProject});
 }

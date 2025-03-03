@@ -71,8 +71,9 @@ router.post('/students/project-topic/:projectTopicId/update', authMiddleware, ch
 
 router.post("/students/projects/upload", authMiddleware, checkRole(['STUDENT']), upload.single('file'), Student.createProjects);
 
+router.post('/students/projects/:projectId/delete', authMiddleware, checkRole(['STUDENT']), Student.deleteProjectFile);
 
-
+ 
 
 
 

@@ -159,7 +159,7 @@ export const createProjects = async(req: Request, res: Response) => {
        include: {
         studentsTopic: {
             where: {
-                status: 'PENDING' //change to approved later
+                status: 'APPROVED' //change to approved later
             }
         },
         studentsProjects: true

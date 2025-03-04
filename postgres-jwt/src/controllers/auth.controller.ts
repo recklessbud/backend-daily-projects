@@ -35,7 +35,8 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     const body = req.body as Login;
         const user = await prisma.user.findUnique({
             where: {
-                username: body.username
+                username: body.username,
+                email: body.email
             },
             include: {
                 role: true
@@ -134,7 +135,8 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
   const body = req.body as Register;
     const existingUser = await prisma.user.findUnique({
       where: {
-        username: body.username
+        username: body.username,
+        email: body.email
       }, 
       include: {
         role: true,

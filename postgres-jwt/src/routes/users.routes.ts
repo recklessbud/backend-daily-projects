@@ -62,7 +62,9 @@ router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADM
 
  router.get('/supervisor/students', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getAssignedStudents);
 
-
+ router.post('/supervisor/topics/:topicId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProjectTopic);
+ 
+ router.post('/supervisor/projects/:projectId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProject);
 
 
  

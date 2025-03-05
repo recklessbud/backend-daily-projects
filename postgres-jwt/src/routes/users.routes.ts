@@ -9,7 +9,6 @@ import * as Admin from "../controllers/admin.controller";
 import * as Student from "../controllers/students.controller"
 import * as Supervisor from "../controllers/supervisor.controller"
 import { upload } from "../config/multer.config";
-
 const router = express.Router();
 
 
@@ -59,14 +58,15 @@ router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADM
 
 //supervisors
 //  router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
+router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getProjects);
 
  router.get('/supervisor/students', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getAssignedStudents);
 
  router.post('/supervisor/topics/:topicId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProjectTopic);
- 
+
  router.post('/supervisor/projects/:projectId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProject);
 
-
+router.get('/supervisor/projects/:projectId/download', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.downloadProject);
  
 //students 
 router.get('/students/dashboard', authMiddleware, checkRole(['STUDENT']), Student.getStudentPage);

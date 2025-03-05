@@ -11,9 +11,11 @@ const s3Client = new S3Client({
     credentials: {
         accessKeyId: process.env.S3_ACCESS_KEY as string,
         secretAccessKey: process.env.S3_ACCESS_SECRET as string
-    }
+    },
+    apiVersion: '2006-03-01',
+    useAccelerateEndpoint: false,
 })  
-// console.log(s3)
+// console.log(s3) xz
 
 
 export const uploadFile = async (file: Express.Multer.File, key: string) => {

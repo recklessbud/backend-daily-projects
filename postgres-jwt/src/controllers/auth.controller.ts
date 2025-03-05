@@ -86,7 +86,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         case "ADMIN":
             return res.redirect("/users/admin/dashboard");
         case "SUPERVISOR": 
-            return res.redirect("/users/supervisor/students");
+            return res.redirect("/users/supervisor/dashboard");
         case "STUDENT":
             return res.redirect("/users/students/dashboard");
         default:
@@ -132,7 +132,7 @@ export const refresh = async(req: Request, res: Response, next: NextFunction): P
 
 
 export const RegisterUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const body = req.body as Register;
+  const body = req.body as Register; 
     const existingUser = await prisma.user.findUnique({
       where: {
         username: body.username,

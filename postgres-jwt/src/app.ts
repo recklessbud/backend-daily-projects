@@ -1,7 +1,7 @@
 // dependencies
 import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import session from 'express-session';
@@ -13,6 +13,7 @@ import { errorHandler } from './middlewares/errorHandler.middleware';
 import homeRoutes from './routes/home.routes';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/users.routes';
+import { morganMiddleware } from './middlewares/morganStream.middleware';
 
 
 
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.set('views', path.join(__dirname, '../src/views'));
 app.use(express.static('public'));
-app.use(morgan('dev'));
+app.use(morganMiddleware);
 app.use(MethodOverride('_method'));
 app.use(session({
     secret: 'secret',

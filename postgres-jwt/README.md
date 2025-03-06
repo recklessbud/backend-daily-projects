@@ -27,3 +27,5 @@ jsonwebtoken
 swagger-ui-express
 yamljs
 cookieparser
+cross-env
+winston-daily-rotate-file

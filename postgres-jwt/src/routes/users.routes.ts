@@ -9,7 +9,10 @@ import * as Admin from "../controllers/admin.controller";
 import * as Student from "../controllers/students.controller"
 import * as Supervisor from "../controllers/supervisor.controller"
 import { upload } from "../config/multer.config";
+import { cacheMiddleware } from "../middlewares/cache.middleware";
+
 const router = express.Router();
+
 
 
 router.get('/superadmin', authMiddleware, checkRole(['SUPER_ADMIN']), getAllUsers);
@@ -60,10 +63,10 @@ router.post('/admin/students/:studentId/assign', authMiddleware, checkRole(['ADM
 //  router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getSupervisorPage);
 router.get('/supervisor/dashboard', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getProjects);
 
- router.get('/supervisor/students', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.getAssignedStudents);
+ router.get('/supervisor/students', authMiddleware, checkRole(['SUPERVISOR']), cacheMiddleware(200), Supervisor.getAssignedStudents);
 
  router.post('/supervisor/topics/:topicId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProjectTopic);
-
+ 
  router.post('/supervisor/projects/:projectId/review', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.reviewProject);
 
 router.get('/supervisor/projects/:projectId/download', authMiddleware, checkRole(['SUPERVISOR']), Supervisor.downloadProject);

@@ -3,7 +3,6 @@ import * as Auth_Controller from "../controllers/auth.controller"
 import * as Validation_Middleware from "../middlewares/validation.middleware"
 // import { authMiddleware } from "../middlewares/auth.middleware";
 import { loginSchema, registerSchema } from "../utils/validation.utils";
-
 const router = express.Router();
 
 //@route   GET /auth/login 

@@ -5,6 +5,7 @@ import prisma from "../config/dbconn";
 import { getFileUrl } from "../services/awsS3.services";
 
 
+
 // export const getSupervisorPage = async(req: Request, res: Response) => {
 //     const user = await prisma.user.findUnique({
 //         where: {
@@ -44,6 +45,7 @@ export const getAssignedStudents = async (req: Request, res: Response) => {
 
         }
     })
+    successResponse(res, 200).json(students);
     // successResponse(res, 200).render('users/supervisor/dashboard', {students: students})
 }
 

@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import prisma from "../config/dbconn";
 import { errorResponse, successResponse } from "../utils/responses.utils";
 import { title } from "process";
+import { logger } from "../utils/logger";
 
 
 
@@ -45,8 +46,18 @@ export async function getEditPage(req: Request, res: Response, next: NextFunctio
     });
     const roles = await prisma.role.findMany();
     if (!user) {
+        logger.warn('Failed to fetch user', { 
+            username: req.user?.username, 
+            ip: req.ip, 
+            reason: 'User not found' 
+
+        });
         errorResponse(res, 404).render('errors/404', { title: 'Admin', message: 'User not found' });
     }
+     logger.info('User fetched', {
+         username: req.user?.username,
+         ip: req.ip
+     })
     successResponse(res, 200).render('users/admin/edit', { title: 'Admin', user: user, roles: roles });
 
 }
@@ -59,7 +70,14 @@ export const updateUserRole = async(req: Request, res: Response, next: NextFunct
 
     const user =  await prisma.user.findUnique({where: {id: userId}});
      if(!user){
-        return errorResponse(res, 404).render('errors/404', {title: 'Admin', message: 'User not found'});
+        logger.warn('Failed to fetch user', { 
+            username: req.user?.username, 
+            ip: req.ip, 
+            reason: 'User not found' 
+
+        });
+         errorResponse(res, 404).render('errors/404', {title: 'Admin', message: 'User not found'});
+         return;
      }
 
      const updateUser =  await prisma.user.update({
@@ -69,6 +87,10 @@ export const updateUserRole = async(req: Request, res: Response, next: NextFunct
         }
      })
      console.log(updateUser);
+     logger.info('User role updated', {
+         username: req.user?.username,
+         ip: req.ip
+        })
      successResponse(res, 200).redirect('/users/admin/dashboard');
 } 
 
@@ -76,7 +98,14 @@ export const updateUserRole = async(req: Request, res: Response, next: NextFunct
 export const createSchool = async(req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body
      if(name === "" || name === undefined){
+        logger.warn('Failed to create school', { 
+            username: req.user?.username, 
+            ip: req.ip, 
+            reason: 'School name is required' 
+
+        });
          errorResponse(res, 400).json({message: 'School name is required'});
+         return;
      } 
      const existingSchool = await prisma.school.findFirst(
         {
@@ -84,6 +113,11 @@ export const createSchool = async(req: Request, res: Response, next: NextFunctio
     }
     );
     if(existingSchool){
+        logger.warn('Failed to create school', {
+            username: req.user?.username,
+            ip: req.ip,
+            reason: 'School already exists'
+        })
         errorResponse(res, 400).json({message: 'School already exists'});	
         return;
     }
@@ -107,6 +141,10 @@ export const updateSchool = async(req: Request, res: Response, next: NextFunctio
             name: name
         }
     })
+    logger.info('School updated', {
+        username: req.user?.username,
+        ip: req.ip
+    })
     successResponse(res, 200).redirect('/users/admin/dashboard');
 }
 export const deleteSchool = async(req: Request, res: Response, next: NextFunction) => {
@@ -115,6 +153,10 @@ export const deleteSchool = async(req: Request, res: Response, next: NextFunctio
         where: {
             id: schoolId
         }
+    })
+    logger.info('School deleted', {
+        username: req.user?.username,
+        ip: req.ip
     })
     successResponse(res, 201).json({message: 'School deleted successfully'});
 }

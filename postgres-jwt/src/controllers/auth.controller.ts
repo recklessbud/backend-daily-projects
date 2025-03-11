@@ -45,13 +45,21 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             }
         })
         if(!user){
-            logger.warn('User not found');
+            logger.warn('Failed Login Attempt', {
+                username: body.username,
+                ip: req.ip,
+                reason: 'User not found'
+            });
             errorResponse(res, 401).render('auth/login', {title: 'Login', message: 'Invalid credentials.'});
             return;
         }
         const isMatch = await bcrypt.compare(body.password, user.password);
         if(!isMatch){
-            logger.warn('Invalid password');
+            logger.warn('Failed login attempt', {
+                username: body.username,
+                ip: req.ip,
+                reason: 'Password does not match'
+            });
             errorResponse(res, 401).render('auth/login', {title: 'Login', message: 'Invalid credentials.'});
             return;
         }
@@ -86,16 +94,37 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
        switch (user.role.name) {
         case "SUPER_ADMIN":
-            logger.info('Super admin logged in', {userId: user.id});
+            logger.info('User logged in successfully', {
+                userId: user.id,
+                role: user.role.name,
+                ip: req.ip
+            });
+    
             return res.redirect("/users/superadmin");
         case "ADMIN":
-            logger.info('admin logged in', {userId: user.id})
+            logger.info('User logged in successfully', {
+                userId: user.id,
+                role: user.role.name,
+                ip: req.ip
+            });
+    
             return res.redirect("/users/admin/dashboard");
         case "SUPERVISOR": 
-        logger.info('supervisor logged in', {userId: user.id});
+            logger.info('User logged in successfully', {
+            userId: user.id,
+            role: user.role.name,
+            ip: req.ip
+            });
+
+
             return res.redirect("/users/supervisor/dashboard");
         case "STUDENT":
-            logger.info('student logged in', {userId: user.id});
+            logger.info('User logged in successfully', {
+                userId: user.id,
+                role: user.role.name,
+                ip: req.ip
+            });
+    
             return res.redirect("/users/students/dashboard");
         default:
             return res.redirect("/auth/login");
@@ -114,7 +143,10 @@ export const refresh = async(req: Request, res: Response, next: NextFunction): P
         const decoded =  verifyRefreshToken(refreshToken) as { id: string, username: string };
         const session = await prisma.session.findUnique({ where: { token: refreshToken } });
         if (!session) {
-            logger.warn('Session not found');
+            logger.warn('Invalid refresh token', {
+                ip: req.ip,
+                reason: 'Session not found'
+            });
             res.status(403).json({ message: "Invalid refresh token" }) 
             return
         };
@@ -154,7 +186,11 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
       }
     })
     if(existingUser){
-        logger.warn('User already exists');
+        logger.warn('Failed Signup Attempt', {
+            username: body.username,
+            ip: req.ip,
+            reason: "User already exists"
+        });
         errorResponse(res, 409).render('auth/register', {title: 'Register', message: 'User already exists. Please login.'});
         return;
     }
@@ -178,7 +214,11 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         }
       })
       if (!school || !school.faculties.length || !school.faculties[0].departments.length) {
-      logger.warn('Invalid school, faculty or department selection');
+      logger.warn('Failed Signup Attempt', {
+        username: body.username,
+        ip: req.ip,
+        reason: 'Invalid school, faculty or department selection'
+      });
         errorResponse(res, 400).render('auth/register', {
           title: 'Register', 
           message: 'Invalid school, faculty or department selection'
@@ -239,20 +279,31 @@ export const RegisterUser = async (req: Request, res: Response, next: NextFuncti
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
     // req.session.id = user.id
-    logger.info('User registered', {userId: user.id});
+    logger.info('User registered', {
+        username: body.username,
+        ip: req.ip,
+    });
     successResponse(res, 302).redirect('/users/students/dashboard');
 }
 
 export const logout = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { refreshToken, accessToken } = req.cookies;
     if(!refreshToken || !accessToken){
-        logger.warn('unauthorized');
+        logger.warn('Failed logout attempt', {
+            username: req.user?.username,
+            ip: req.ip,
+            reason: 'No refresh token or access token provided'
+        });
         errorResponse(res, 401).render('users/dashboard', {title: 'dashboard', message: 'unauthorized', user: req.user});
         return
     }
     const token = await prisma.session.findUnique({ where: { token: refreshToken } });
     if (!token) {
-        logger.warn('Invalid refresh token');
+        logger.warn('Failed logout attempt', {
+            username: req.user?.username,
+            ip: req.ip,
+            reason: 'Invalid refresh token'
+        });
         res.status(403).render("users/dashboard", { message: "Invalid refresh token" , user: req.user}); 
         return
     };
@@ -260,6 +311,9 @@ export const logout = async(req: Request, res: Response, next: NextFunction): Pr
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     
-    logger.info('User logged out', {userId: token.userId});
+    logger.info('User logged out', {
+        username: req.user?.username,
+        ip: req.ip,
+    });
     successResponse(res, 200).redirect('/auth/login');
 }

@@ -35,7 +35,9 @@ router.post("/admin/update/:userId", authMiddleware, checkRole(['ADMIN']), Admin
 
 router.post("/admin/school", authMiddleware, checkRole(['ADMIN']),Admin.createSchool)
 
-router.post('/admin/delete/:schoolId', authMiddleware, checkRole(['ADMIN']), Admin.deleteSchool);
+router.post('/admin/schools/:schoolId/update', authMiddleware, checkRole(['ADMIN']), Admin.updateSchool);
+
+router.post('/admin/schools/:schoolId/delete', authMiddleware, checkRole(['ADMIN']), Admin.deleteSchool);
 
 router.post('/admin/:schoolId/faculties', authMiddleware, checkRole(['ADMIN']), Admin.createFaculty);
 

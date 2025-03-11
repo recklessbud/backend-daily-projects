@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\reggi\\Documents\\backend-daily\\postgres-session-auth\\logs\\.8bbde4d0e9811d0a5780899f2409abf02e53844b-audit.json",
+    "files": [
+        {
+            "date": 1741692064550,
+            "name": "C:\\Users\\reggi\\Documents\\backend-daily\\postgres-session-auth\\logs\\combined-2025-03-11.log",
+            "hash": "986760a04b0ac9bc4134b65ef4972b97d1c5214e35e112f1de6529bf2ebb3762"
+        }
+    ],
+    "hashType": "sha256"
+}

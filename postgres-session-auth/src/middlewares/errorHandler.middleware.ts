@@ -15,7 +15,7 @@ export const errorHandler = (err: CustomError, req: Request, res: Response, next
 
   // Enhanced error logging
   logger.error('Error occurred', {
-    ip: req.ip,
+    ip: req.ip, 
     method: req.method,
     path: req.path,
     errorDetails: {

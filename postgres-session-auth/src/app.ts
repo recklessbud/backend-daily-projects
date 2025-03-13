@@ -15,8 +15,9 @@ import cookieParser from 'cookie-parser';
 //files and folders imports
 import { morganMiddleware } from './middlewares/morgan.middleware';
 import { errorHandler } from './middlewares/errorHandler.middleware';
-import HomeRouter from "./routes/api/v1/home.routes"
+import HomeRouter from "./routes/api/home.routes"
 import './config/passport'
+import AuthRouter  from "./routes/api/v1/auth.routes"
 // import { link } from 'fs';
 
 
@@ -34,12 +35,13 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morganMiddleware);
 }
 app.use(session({
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     secret: "keyboard cat",
     cookie: {
-        secure: true,
-        httpOnly: true
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000
     }
 }))
 
@@ -57,6 +59,8 @@ app.use(flash());
 
 //routes
 app.use('/', HomeRouter)
+//auth
+app.use('/api/v1/auth', AuthRouter)
 
 
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -3,26 +3,38 @@ import { Strategy as LocalStrategy } from "passport-local";
 // import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import prisma from "./dbconn";
 import bcrypt from 'bcrypt'
-// import {User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 
 //
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-passport.serializeUser<any, any>((req, user, done) => {
-    done(undefined, user);
+passport.serializeUser((user: User, done) => {
+    done(null, user.id);
   });
   
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (id: string, done) => {
     try {
-      return done(null, await prisma.user.findUnique({
-        where: {
-            id: id as string
+        const user = await prisma.user.findUnique({
+            where: {
+                id: id
+            }
+        });
+        
+        if (!user) {
+            return done(new Error('User not found'));
         }
-      }));
+        
+        return done(null, user);
     } catch (error) {
-      return done(error);
+        return done(error);
     }
-  });
+});
+
+
+  // Helper function to hash password
+const hashPassword = async (password: string): Promise<string> => {
+  return bcrypt.hash(password, 12);
+};
+
 
 
   passport.use(
@@ -50,3 +62,5 @@ passport.serializeUser<any, any>((req, user, done) => {
     return done(error)
    }  
 }))
+
+export {hashPassword}

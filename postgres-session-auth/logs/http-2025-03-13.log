@@ -1,0 +1,101 @@
+2025-03-13T18:24:24.246Z info: ::1 - - [13/Mar/2025:18:24:24 +0000] "GET / HTTP/1.1" 200 210 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:24:53.512Z info: New user registered: addo
+2025-03-13T18:24:53.519Z info: ::1 - - [13/Mar/2025:18:24:53 +0000] "POST /api/v1/auth/signup HTTP/1.1" 201 304 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:43:10.279Z info: New user registered: addo
+2025-03-13T18:43:10.296Z info: ::1 - - [13/Mar/2025:18:43:10 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 33 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:43:10.334Z error: Error occurred
+2025-03-13T18:44:23.289Z info: ::1 - - [13/Mar/2025:18:44:23 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 33 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:48:27.422Z info: ::1 - - [13/Mar/2025:18:48:27 +0000] "GET / HTTP/1.1" 200 210 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:48:34.129Z info: Failed login attempt for user: addo
+2025-03-13T18:48:34.137Z info: ::1 - - [13/Mar/2025:18:48:34 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 47 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:49:22.322Z info: New user registered: honey
+2025-03-13T18:49:22.328Z info: ::1 - - [13/Mar/2025:18:49:22 +0000] "POST /api/v1/auth/signup HTTP/1.1" 201 304 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:54:31.831Z info: New user registered: honey
+2025-03-13T18:54:31.866Z info: ::1 - - [13/Mar/2025:18:54:31 +0000] "POST /api/v1/auth/signup HTTP/1.1" 201 357 "-" "PostmanRuntime/7.43.0"
+2025-03-13T18:55:10.970Z info: Successful login for user: honey
+2025-03-13T18:55:10.981Z info: ::1 - - [13/Mar/2025:18:55:10 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 146 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:06:08.701Z info: ::1 - - [13/Mar/2025:19:06:08 +0000] "POST /api/v1/auth/signup HTTP/1.1" 400 187 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:06:20.018Z info: New user registered: bhim
+2025-03-13T19:06:20.057Z info: ::1 - - [13/Mar/2025:19:06:20 +0000] "POST /api/v1/auth/signup HTTP/1.1" 201 356 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:13:54.957Z info: Successful login for user: bhim
+2025-03-13T19:13:54.980Z info: ::1 - - [13/Mar/2025:19:13:54 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 240 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:19:32.404Z info: ::1 - - [13/Mar/2025:19:19:32 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:19:32.411Z info: ::1 - - [13/Mar/2025:19:19:32 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:20:24.786Z info: ::1 - - [13/Mar/2025:19:20:24 +0000] "GET /api/v1/logout HTTP/1.1" 404 152 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:20:58.826Z info: ::1 - - [13/Mar/2025:19:20:58 +0000] "GET /api/v1/logout HTTP/1.1" 404 152 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:21:10.890Z info: ::1 - - [13/Mar/2025:19:21:10 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:21:10.898Z info: ::1 - - [13/Mar/2025:19:21:10 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:22:46.723Z info: ::1 - - [13/Mar/2025:19:22:46 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:22:46.743Z info: ::1 - - [13/Mar/2025:19:22:46 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:15.641Z info: ::1 - - [13/Mar/2025:19:23:15 +0000] "GET /logout HTTP/1.1" 404 145 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:22.118Z info: ::1 - - [13/Mar/2025:19:23:22 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:22.130Z info: ::1 - - [13/Mar/2025:19:23:22 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:30.600Z info: ::1 - - [13/Mar/2025:19:23:30 +0000] "GET /api/v1/logout HTTP/1.1" 404 152 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:38.226Z info: ::1 - - [13/Mar/2025:19:23:38 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:23:38.235Z info: ::1 - - [13/Mar/2025:19:23:38 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:26:08.466Z info: ::1 - - [13/Mar/2025:19:26:08 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:26:08.479Z info: ::1 - - [13/Mar/2025:19:26:08 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:26:19.208Z info: ::1 - - [13/Mar/2025:19:26:19 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:26:19.215Z info: ::1 - - [13/Mar/2025:19:26:19 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:31:56.697Z info: ::1 - - [13/Mar/2025:19:31:56 +0000] "GET /api/v1/auth/logout HTTP/1.1" 302 39 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:31:56.713Z info: ::1 - - [13/Mar/2025:19:31:56 +0000] "GET /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 168 "http://localhost:9001/api/v1/auth/logout" "PostmanRuntime/7.43.0"
+2025-03-13T19:34:43.575Z info: ::1 - - [13/Mar/2025:19:34:43 +0000] "GET /api/v1/auth/logout HTTP/1.1" 401 32 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:36:05.999Z info: ::1 - - [13/Mar/2025:19:36:05 +0000] "GET /api/v1/auth/logout HTTP/1.1" 200 29 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:36:16.863Z info: Successful login for user: bhim
+2025-03-13T19:36:16.869Z info: ::1 - - [13/Mar/2025:19:36:16 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 240 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:36:25.716Z info: ::1 - - [13/Mar/2025:19:36:25 +0000] "GET /api/v1/auth/logout HTTP/1.1" 200 29 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:38:49.252Z info: ::1 - - [13/Mar/2025:19:38:49 +0000] "GET /api/v1/auth/logout HTTP/1.1" 200 29 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:38:58.634Z info: ::1 - - [13/Mar/2025:19:38:58 +0000] "GET / HTTP/1.1" 200 210 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:39:15.215Z info: ::1 - - [13/Mar/2025:19:39:15 +0000] "GET / HTTP/1.1" 200 210 "-" "PostmanRuntime/7.43.0"
+2025-03-13T19:46:38.801Z error: Error occurred
+2025-03-13T19:46:38.817Z info: ::1 - - [13/Mar/2025:19:46:38 +0000] "GET /api/v1/auth/login HTTP/1.1" 500 413 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:46:39.338Z info: ::1 - - [13/Mar/2025:19:46:39 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:47:13.165Z error: Error occurred
+2025-03-13T19:47:13.170Z info: ::1 - - [13/Mar/2025:19:47:13 +0000] "GET /api/v1/auth/login HTTP/1.1" 500 422 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:48:00.123Z info: ::1 - - [13/Mar/2025:19:48:00 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 823 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:48:12.302Z info: ::1 - - [13/Mar/2025:19:48:12 +0000] "GET /api/v1/auth/api/v1/auth/signup HTTP/1.1" 404 169 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:49:04.382Z info: ::1 - - [13/Mar/2025:19:49:04 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 817 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:49:06.015Z info: ::1 - - [13/Mar/2025:19:49:06 +0000] "GET /auth/signup HTTP/1.1" 404 150 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:49:30.697Z info: ::1 - - [13/Mar/2025:19:49:30 +0000] "GET /auth/signup HTTP/1.1" 404 150 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:49:37.225Z info: ::1 - - [13/Mar/2025:19:49:37 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 824 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:49:38.657Z info: ::1 - - [13/Mar/2025:19:49:38 +0000] "GET /api/v1/auth/signup HTTP/1.1" 200 831 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:57:11.815Z info: ::1 - - [13/Mar/2025:19:57:11 +0000] "POST /api/v1/auth/api/v1/auth/login HTTP/1.1" 404 169 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:58:09.643Z info: ::1 - - [13/Mar/2025:19:58:09 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:58:20.292Z info: Successful login for user: bhim
+2025-03-13T19:58:20.299Z info: ::1 - - [13/Mar/2025:19:58:20 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T19:58:20.353Z error: Error occurred
+2025-03-13T19:58:20.362Z info: ::1 - - [13/Mar/2025:19:58:20 +0000] "GET /dashboard HTTP/1.1" 500 376 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T20:00:48.830Z info: ::1 - - [13/Mar/2025:20:00:48 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T20:00:53.057Z info: ::1 - - [13/Mar/2025:20:00:53 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T20:01:30.979Z info: Successful login for user: bhim
+2025-03-13T20:01:30.985Z info: ::1 - - [13/Mar/2025:20:01:30 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T20:01:30.994Z info: ::1 - - [13/Mar/2025:20:01:30 +0000] "GET /dashboard HTTP/1.1" 200 29 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:01.570Z info: ::1 - - [13/Mar/2025:21:21:01 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:04.649Z info: ::1 - - [13/Mar/2025:21:21:04 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:24.519Z info: Successful login for user: bhim
+2025-03-13T21:21:24.531Z info: ::1 - - [13/Mar/2025:21:21:24 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:24.550Z info: ::1 - - [13/Mar/2025:21:21:24 +0000] "GET /dashboard HTTP/1.1" 200 18 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:36.592Z info: ::1 - - [13/Mar/2025:21:21:36 +0000] "GET /api/v1/auth/signup HTTP/1.1" 304 - "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:57.564Z info: New user registered: smoke126
+2025-03-13T21:21:57.572Z info: ::1 - - [13/Mar/2025:21:21:57 +0000] "POST /api/v1/auth/signup HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/signup" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:21:57.593Z info: ::1 - - [13/Mar/2025:21:21:57 +0000] "GET /dashboard HTTP/1.1" 304 - "http://localhost:9001/api/v1/auth/signup" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:26:55.384Z info: ::1 - - [13/Mar/2025:21:26:55 +0000] "GET /api/v1/auth/signup HTTP/1.1" 200 831 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:26:57.896Z info: ::1 - - [13/Mar/2025:21:26:57 +0000] "GET /api/v1/auth/signup HTTP/1.1" 304 - "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:26:58.935Z info: ::1 - - [13/Mar/2025:21:26:58 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:27:00.469Z info: ::1 - - [13/Mar/2025:21:27:00 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:27:16.359Z info: Successful login for user: bhim
+2025-03-13T21:27:16.372Z info: ::1 - - [13/Mar/2025:21:27:16 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:27:16.477Z error: Error occurred
+2025-03-13T21:27:16.483Z info: ::1 - - [13/Mar/2025:21:27:16 +0000] "GET /dashboard HTTP/1.1" 500 1029 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:29:22.789Z info: ::1 - - [13/Mar/2025:21:29:22 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:29:24.877Z info: ::1 - - [13/Mar/2025:21:29:24 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:33:44.979Z info: Successful login for user: bhim
+2025-03-13T21:33:44.993Z info: ::1 - - [13/Mar/2025:21:33:44 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T21:33:45.109Z error: Error occurred
+2025-03-13T21:33:45.115Z info: ::1 - - [13/Mar/2025:21:33:45 +0000] "GET /dashboard HTTP/1.1" 500 1096 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:24:07.249Z info: ::1 - - [13/Mar/2025:23:24:07 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:24:37.769Z info: ::1 - - [13/Mar/2025:23:24:37 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:25:19.474Z info: Successful login for user: bhim
+2025-03-13T23:25:19.494Z info: ::1 - - [13/Mar/2025:23:25:19 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:25:19.559Z error: Error occurred
+2025-03-13T23:25:19.564Z info: ::1 - - [13/Mar/2025:23:25:19 +0000] "GET /dashboard HTTP/1.1" 500 1037 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"

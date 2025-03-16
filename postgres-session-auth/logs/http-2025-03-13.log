@@ -99,3 +99,15 @@
 2025-03-13T23:25:19.494Z info: ::1 - - [13/Mar/2025:23:25:19 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
 2025-03-13T23:25:19.559Z error: Error occurred
 2025-03-13T23:25:19.564Z info: ::1 - - [13/Mar/2025:23:25:19 +0000] "GET /dashboard HTTP/1.1" 500 1037 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:37:29.404Z info: ::1 - - [13/Mar/2025:23:37:29 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:9001/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:37:32.232Z info: ::1 - - [13/Mar/2025:23:37:32 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:37:34.701Z info: ::1 - - [13/Mar/2025:23:37:34 +0000] "GET /api/v1/auth/login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:38:20.255Z info: Successful login for user: bhim
+2025-03-13T23:38:20.263Z info: ::1 - - [13/Mar/2025:23:38:20 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:38:20.299Z info: ::1 - - [13/Mar/2025:23:38:20 +0000] "GET /dashboard HTTP/1.1" 200 347 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:38:32.802Z info: User logged out: f65c93fc-e6fa-4f8a-b06f-8bc39878b506
+2025-03-13T23:38:32.809Z info: ::1 - - [13/Mar/2025:23:38:32 +0000] "GET /api/v1/auth/logout HTTP/1.1" 200 37 "http://localhost:9001/dashboard" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:39:06.173Z info: ::1 - - [13/Mar/2025:23:39:06 +0000] "GET /api/v1/auth/login HTTP/1.1" 200 825 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:39:24.776Z info: Successful login for user: bhim
+2025-03-13T23:39:24.781Z info: ::1 - - [13/Mar/2025:23:39:24 +0000] "POST /api/v1/auth/login HTTP/1.1" 302 39 "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+2025-03-13T23:39:24.810Z info: ::1 - - [13/Mar/2025:23:39:24 +0000] "GET /dashboard HTTP/1.1" 304 - "http://localhost:9001/api/v1/auth/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"

@@ -7,8 +7,8 @@ import { User } from "@prisma/client";
 
 
 //
-passport.serializeUser((user: User, done) => {
-    done(null, user.id);
+passport.serializeUser((user: Express.User, done: (error: Error | null, id?: string) => void) => {
+    done(null, (user as User).id);
   });
   
   passport.deserializeUser(async (id: string, done) => {
@@ -19,7 +19,7 @@ passport.serializeUser((user: User, done) => {
             }
         });
         
-        if (!user) {
+        if (!user) { 
             return done(new Error('User not found'));
         }
         

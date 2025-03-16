@@ -10,6 +10,11 @@ import {  Register } from "../utils/validator.utils";
 import { AuthService } from "../services/auth.service";
 import { User } from "@prisma/client";
 import { errorResponse, successResponse } from "../utils/responses.utils";
+import { sendEEmail } from "../services/email.service";
+import prisma from "../config/dbconn";
+import { generateResetToken } from "../utils/token.utils";
+import { hashPassword } from "../config/passport";
+// impor hashPassword
 // import { error } from "console";
 
 
@@ -41,6 +46,13 @@ export const getProfile = (req: Request, res: Response):void => {
     });	
 }
 
+export const getForgotPassword = (req: Request, res: Response):void => {
+    res.render("auth/forgot", {
+        title: "Forgot Password",
+        user: req.user,
+        message: ""
+    })
+}
 
 
 
@@ -50,7 +62,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
      const existingUser = await AuthService.findUser(body.username, body.email);
      
      if(existingUser){
-         res.status(400).json({ message: "User already exists" });
+       errorResponse(res, 409).json({message: "User already exists"});	
          return;
      }
 
@@ -151,4 +163,145 @@ export const getLogout = async (req: Request, res: Response, next: NextFunction)
         logger.error('Logout error:', error);
         next(error);
     }
+};
+
+
+
+export const requestPasswordReset = async(req: Request, res: Response):Promise<any> => {
+  const {email} = req.body
+  
+  try {
+     const userEmail =  await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+     })
+     if(!userEmail){
+       return errorResponse(res, 400).render("auth/signup", {message: "User not found, please create account"}) 
+     }
+     const resetToken = generateResetToken({id: userEmail.id, username: userEmail.username})
+   userEmail.resetPasswordToken = resetToken
+   userEmail.resetTokenExpiry = new Date(Date.now() + 10 * 60 * 1000)
+
+   await prisma.user.update({
+    where: {
+      id: userEmail.id
+    },
+    data: {
+      resetPasswordToken: resetToken,
+      resetTokenExpiry: new Date(Date.now() + 10 * 60 * 1000)
+    }
+   })
+    
+   const resetLink = `${process.env.BASE_URL}/api/v1/auth/${resetToken}/reset-password`
+   const emailText= `
+   Hello ${userEmail.username},
+
+     Click the link below to reset your password:
+       ${resetLink}
+
+       This link will expire in 10 minutes.
+
+   If you didn’t request this, please ignore it.`
+     
+   await sendEEmail(userEmail.email, "Password reset", emailText)	
+   logger.info(`Password reset link sent to ${userEmail.email}`)
+   console.log("token:", resetToken)
+   return successResponse(res, 200).render("auth/forgot", {message: "Password reset link sent to your email"})
+  } catch (error) {
+   console.log(error)
+   logger.error('Password reset error:', error)
+   return errorResponse(res, 500).json({message: "Internal server error"})
+  }
+
+}
+
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { resetToken } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+
+  try {
+      // Validate passwords match
+      if (newPassword !== confirmPassword) {
+          errorResponse(res, 400).json({message: "Passwords do not match"});
+      }
+
+      // Find user with valid reset token
+      const user = await prisma.user.findFirst({
+          where: {
+              resetPasswordToken: resetToken,
+              resetTokenExpiry: {
+                  gt: new Date() // Check if token hasn't expired
+              }
+          }
+      });
+
+      if (!user) {
+          // logger.info('Invalid or expired password reset token attempted');
+          errorResponse(res, 400).json({message: "Invalid or expired password reset token"});
+      }
+
+      // Hash the new password
+      const hashedPassword = await hashPassword(newPassword);
+
+      // Update user password and clear reset token
+      await prisma.user.update({
+          where: {
+              id: user?.id
+          },
+          data: {
+              password: hashedPassword,
+              resetPasswordToken: null, // Clear the reset token
+              resetTokenExpiry: null  // Clear the expiry
+          }
+      });
+
+      logger.info(`Password reset successful for user: ${user?.username}`);
+
+       successResponse(res, 200).render("auth/login", {
+          title: "Login",
+          message: "Password reset successful. Please login with your new password.",
+          user: null
+      });
+
+  } catch (error) {
+      logger.error('Password reset error:', error);
+      next(error);
+  }
+};
+
+// export const getReset = (req: Request, res: Response)=>{
+//   res.render("auth/resetPass", {resetToken: req.params.resetPasswordToken})
+// }
+
+export const getReset = async (req: Request, res: Response): Promise<void> => {
+  const { token } = req.params;  // Get token from URL params
+
+  try {
+      // Verify token is valid
+      const user = await prisma.user.findFirst({
+          where: {
+              resetPasswordToken: token,
+              resetTokenExpiry: {
+                  gt: new Date()
+              }
+          }
+      });
+
+      if (!user) {
+          logger.info('Invalid reset token accessed');
+          return res.redirect('/api/v1/auth/forgot');
+      }
+
+      // Render reset password page with token
+      res.render('auth/resetPass', {
+          title: 'Reset Password',
+          resetToken: token,
+          user: null
+      });
+  } catch (error) {
+      logger.error('Error in reset password page:', error);
+      res.redirect('/api/v1/auth/forgot');
+  }
 };

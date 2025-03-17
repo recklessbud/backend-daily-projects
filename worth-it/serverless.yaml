@@ -1,51 +1,3 @@
-# # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-# org: bureck
-# service: nodejs-aws-lambda
-# provider:
-#   name: aws
-#   runtime: nodejs18.x
-#   region: us-east-1
-#   stage: dev
-#   iam:
-#     role:
-#       statements:
-#         - Effect: Allow
-#           Action:
-#             - lambda:CreateFunction
-#             - lambda:InvokeFunction
-#             - lambda:GetFunction
-#             - lambda:UpdateFunctionCode
-#             - logs:CreateLogGroup
-#             - logs:CreateLogStream
-#             - logs:PutLogEvents
-#           Resource: "*"
-#   # credentials:
-#   #   accessKeyId: ${file(./config/env.config.js):aws.accessKeyId}
-#   #   secretAccessKey: ${file(./config/env.config.js):aws.secretAccessKey}
-#   environment:
-#     # NODE_ENV: development
-#     CUSTOM_AWS_ACCESS_KEY: ${env:CUSTOM_AWS_ACCESS_KEY}
-#     CUSTOM_AWS_SECRET_KEY: ${env:CUSTOM_AWS_SECRET_KEY}
-# functions:
-#    app:
-#     handler: index.handler
-#     name: ${self:service}-${self:provider.stage}-app
-#     events:
-#       - http:
-#           path: /
-#           method: ANY
-#           cors: true
-#       - http:
-#           path: /{proxy+}
-#           method: ANY
-#           cors: true
-# plugins:
-#   - serverless-offline
-# custom:
-#   serverless-offline:
-#     noPrependStageInUrl: true
-
-
 org: bureck
 service: nodejs-aws-lambda
 provider:
@@ -69,7 +21,7 @@ provider:
     NODE_ENV: ${opt:stage, 'dev'}
 functions:
   app:
-    handler: index.handler
+    handler: src/index.handler
     events:
       - http:
           path: /
@@ -81,6 +33,23 @@ functions:
           cors: true
 plugins:
   - serverless-offline
+package:
+  include:
+    - src/views/**
+  patterns:
+    - 'src/**'
+    - 'src/views/**'
+    - '!node_modules/**'
+    - '!.git/**'
+    - '!test/**'
+
 custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: ['aws-sdk']
+    target: 'node18'
+    platform: 'node'
   serverless-offline:
     noPrependStageInUrl: true

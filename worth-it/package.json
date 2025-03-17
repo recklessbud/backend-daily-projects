@@ -3,22 +3,38 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
-    "start": "serverless offline"
+    "dev": " cross-env NODE_ENV=development nodemon",
+    "start": "serverless offline",
+    "build": "tsc && copyfiles -u 1 \"views/**/*\" .serverless/build/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/ejs": "^3.1.5",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
     "express": "^4.21.2",
     "serverless-http": "^3.2.0",
-    "yaml": "^2.7.0" ,
-    "dotenv": "^16.4.7"
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.0",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.13.10",
+    "copyfiles": "^2.4.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
-    "serverless-offline": "^14.4.0"
+    "serverless-esbuild": "^1.55.0",
+    "serverless-offline": "^14.4.0",
+    "serverless-plugin-typescript": "^2.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
   }
 }

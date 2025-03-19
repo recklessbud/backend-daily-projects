@@ -12,6 +12,6 @@ router.get('/', getHome);
 //   successResponse(res, 404).json({ error: 'Route not found' });
 // });
 
-router.get('/login', getLogin)
-
+router.get('/login', getLogin) 
+ 
 export default router;

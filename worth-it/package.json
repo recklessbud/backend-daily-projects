@@ -5,13 +5,17 @@
   "scripts": {
     "dev": " cross-env NODE_ENV=development nodemon",
     "start": "serverless offline",
-    "build": "tsc && copyfiles -u 1 \"views/**/*\" .serverless/build/"
+    "build": "tsc && copyfiles -u 1 \"views/**/*\" .serverless/build/",
+     "debug": "cross-env NODE_ENV=development SLS_DEBUG=* serverless offline --httpPort 3000 --lambdaPort 3002 --verbose"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@middy/core": "^6.1.5",
+    "@middy/http-error-handler": "^6.1.5",
+    "@middy/http-json-body-parser": "^6.1.5",
     "@types/ejs": "^3.1.5",
     "axios": "^1.8.3",
     "cheerio": "^1.0.0",

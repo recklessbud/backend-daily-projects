@@ -2,12 +2,10 @@ import puppeteer from "puppeteer-core";
 import * as cheerio from "cheerio";
 import  Chromium  from "chrome-aws-lambda";
 import { CHROME_PATH, NODE_ENV } from "../config/env.config";
+import { fileOps } from "../utils/fileOps.utils";
 // import { mkdir, rm } from "fs/promises";
 // import { rm, writeFileSync } from "fs";
-import { fileOps } from "../utils/fileOps.utils";
-import { tempDirManager } from "../utils/tempDir.utils";
-import { scrapeUrl, CHROME_TEMP_DIR } from "../controllers/product.controller";
-
+// import { fileOps } from "../utils/fileOps.utils";
 
 interface ScrapedProduct {
     title: string;
@@ -16,14 +14,13 @@ interface ScrapedProduct {
     url: string;
 }
 
- export const scrape = async (url: string, tempDir: string): Promise<ScrapedProduct[]> => {
+export const scrape = async (url: string): Promise<ScrapedProduct[] | undefined> => {
     try {
-        await tempDirManager.create(tempDir);
-        const executablePath = NODE_ENV === "production" ?await Chromium.executablePath
+        const executablePath = NODE_ENV === "production" ? await Chromium.executablePath
         : CHROME_PATH
 
         const browser = await puppeteer.launch({
-            args: [...Chromium.args, '--no-sandbox',`--user-data-dir=${tempDir}`],
+            args: [...Chromium.args, '--no-sandbox'],
             executablePath: executablePath,
             headless: Chromium.headless,
             defaultViewport: Chromium.defaultViewport,
@@ -56,19 +53,18 @@ interface ScrapedProduct {
                 url: productUrl ? new URL(productUrl, url).toString() : url
             });
         });  
-      
         
-        await browser.close();
+        await fileOps.saveData(products)
+        await browser.close();        
 
-await fileOps.saveData(products);
+        return products
 
-        await tempDirManager.cleanup(tempDir);
-        return products;
     } catch (error) {
         console.error('Scraping error:', error);
-        await tempDirManager.cleanup(tempDir);
         // throw new Error(`Failed to scrape URL: ${url}`);
-        return await fileOps.readData()
+        // return undefined;
+       
+        // return await fileOps.readData()
     }
 }
 

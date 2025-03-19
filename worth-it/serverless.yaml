@@ -5,12 +5,13 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   stage: dev
-  timeout: 30
+  timeout: 29
   memorySize: 2048
   layers:
     - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:22
   apiGateway:
     shouldStartNameWithService: true
+    timeout: 29000
     cors:
       origin: '*'
       headers:
@@ -24,18 +25,27 @@ provider:
   environment:
     NODE_ENV: ${opt:stage, 'dev'}
     CHROME_PATH: ${env:CHROME_PATH}
+    baseUrl: ${env:baseUrl}
 functions:
   app:
     handler: src/index.handler
+    timeout: 29
     events:
       - http:
           path: /
           method: ANY
-          cors: true
+          cors: true 
+          integration: lambda-proxy
+          integrationResponseParameters:
+            method.response.header.Content-Type: "'application/json'"
+          response:
+            headers:
+              Content-Type: "'application/json'"
       - http:
           path: /{proxy+}
           method: ANY
           cors: true
+          integration: lambda-proxy
 plugins:
   - serverless-offline
 package:
@@ -59,3 +69,13 @@ custom:
     platform: 'node'
   serverless-offline:
     noPrependStageInUrl: true
+    httpTimeout: 30000
+    lambdaTimeout: 30
+    lambdaPort: 3002
+    debug: "*"
+    useChildProcesses: true
+    httpEvents: true
+    # Enable WebSocket support
+    websocket: true
+    # Increase memory
+    memorySize: 2048

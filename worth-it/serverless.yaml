@@ -5,6 +5,10 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   stage: dev
+  timeout: 30
+  memorySize: 2048
+  layers:
+    - arn:aws:lambda:us-east-1:764866452798:layer:chrome-aws-lambda:22
   apiGateway:
     shouldStartNameWithService: true
     cors:
@@ -19,6 +23,7 @@ provider:
       allowCredentials: false
   environment:
     NODE_ENV: ${opt:stage, 'dev'}
+    CHROME_PATH: ${env:CHROME_PATH}
 functions:
   app:
     handler: src/index.handler
@@ -40,13 +45,14 @@ package:
     - 'src/**'
     - 'src/views/**'
     - '!node_modules/**'
+    -  'data/**'
     - '!.git/**'
     - '!test/**'
 
 custom:
   esbuild:
     bundle: true
-    minify: false
+    minify: false 
     sourcemap: true
     exclude: ['aws-sdk']
     target: 'node18'

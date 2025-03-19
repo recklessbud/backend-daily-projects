@@ -9,5 +9,6 @@ module.exports = {
         accessKeyId: processEnv.CUSTOM_AWS_ACCESS_KEY,
         secretAccessKey: processEnv.CUSTOM_AWS_SECRET_KEY
     },
-    NODE_ENV: processEnv.NODE_ENV
+    NODE_ENV: processEnv.NODE_ENV,
+    CHROME_PATH: processEnv.CHROME_PATH
 }

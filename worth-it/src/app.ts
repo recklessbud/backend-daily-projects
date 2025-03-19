@@ -15,7 +15,6 @@ const app = express();
  import { morganFormats } from "./utils/morgan.utils";
  import productRouter from "./routes/products.routes";
 
-
 // Body parser configuration
 app.use(express.json({
   verify: (req: any, res: Response, buf: Buffer, encoding: string) => {
@@ -29,6 +28,7 @@ app.use(express.urlencoded({
   extended: true, 
   limit: '10mb'
 }));
+
 
 
 // app.set('trust proxy', true)

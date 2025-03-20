@@ -1,0 +1,6 @@
+{
+    "watch": ["src"],
+    "ext": "js,json,ts",
+    "ignore": ["node_modules/", ".serverless/"],
+    "exec": "serverless offline"
+  }

@@ -1,0 +1,119 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: bureck
+# "service" is the name of this project. This will also be added to your AWS resource names.
+app: aws-node-http-start
+service: aws-node-http-start
+
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: dev
+  region: us-east-1
+  tracing:
+    apiGateway: true
+    lambda: true
+  memorySize: 512
+  timeout: 20
+  httpApi:
+    cors: true
+  apiGateway:
+    metrics: true
+    shouldStartNameWithService: true
+    minimumCompressionSize: 1024
+  environment:
+    NODE_ENV: ${opt:stage, 'dev'}
+
+
+functions:
+  hello:
+    handler: src/index.handler
+    events: 
+    - httpApi:
+        path: /
+        method: ANY  # Consider specifying exact methods instead of ANY
+        cors:
+          allowedOrigins:
+            - '*'            # Restrict this in production
+          allowedHeaders:
+            - Content-Type
+            - Authorization
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          maxAge: 3600
+    - http:
+        path: /{proxy+}
+        method: ANY
+        cors:
+          allowedOrigins:
+            - '*'            # Restrict this in production
+          allowedHeaders:
+            - Content-Type
+            - Authorization
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          maxAge: 3600  
+    timeout: 10
+    memorySize: 256
+    tags:
+      Function: hello
+
+package:
+  individually: true
+  patterns:
+    # Include necessary files
+    - "src/**/*.ts"
+    - "src/**/*.js"
+    - "package.json"
+    - "package-lock.json"
+    
+    # Exclude unnecessary files
+    - "!src/**/*.test.ts"
+    - "!src/**/*.spec.ts"
+    - "!src/**/*.test.js"
+    - "!src/**/__tests__/**"
+    - "!src/**/__mocks__/**"
+    - "!.git/**"
+    - "!.vscode/**"
+    - "!node_modules/**"
+    - "!test/**"
+    - "!tests/**"
+    - "!**/*.md"
+    - "!.env*"
+    - "!tsconfig.json"
+    - "!jest.config.js"
+    - "!.eslintrc*"
+    - "!.prettierrc*"
+    - "!.serverless/**"
+  excludeDevDependencies: true
+
+plugins:
+  - serverless-offline
+
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
+    noPrependStageInUrl: true
+    reloadHandler: true
+
+  esbuild:
+    bundle: true
+    minify: false
+    sourceMap: linked
+    exclude:
+      - aws-sdk
+    target: node20
+    platform: node
+    concurrency: 10
+
+

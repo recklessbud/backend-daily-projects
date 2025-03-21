@@ -17,6 +17,8 @@ provider:
   timeout: 20
   httpApi:
     cors: true
+    binaryMediaTypes:
+      - "*/*"
   apiGateway:
     metrics: true
     shouldStartNameWithService: true
@@ -30,14 +32,14 @@ functions:
     handler: src/index.handler
     events: 
     - httpApi:
-        path: /
+        path: /v1
         method: ANY  # Consider specifying exact methods instead of ANY
         cors:
           allowedOrigins:
             - '*'            # Restrict this in production
           allowedHeaders:
             - Content-Type
-            - Authorization
+            - Authorization 
           allowedMethods:
             - GET
             - POST
@@ -68,12 +70,17 @@ functions:
 
 package:
   individually: true
+  include:
+    - src/views/**
+    - node_modules/ejs/**
   patterns:
     # Include necessary files
     - "src/**/*.ts"
     - "src/**/*.js"
     - "package.json"
     - "package-lock.json"
+    - node_modules/ejs/**
+    - src/views/**    
     
     # Exclude unnecessary files
     - "!src/**/*.test.ts"
@@ -83,7 +90,7 @@ package:
     - "!src/**/__mocks__/**"
     - "!.git/**"
     - "!.vscode/**"
-    - "!node_modules/**"
+    # - "!node_modules/**
     - "!test/**"
     - "!tests/**"
     - "!**/*.md"
@@ -97,7 +104,8 @@ package:
 
 plugins:
   - serverless-offline
-
+  - serverless-static
+  - serverless-plugin-static
 
 custom:
   serverless-offline:

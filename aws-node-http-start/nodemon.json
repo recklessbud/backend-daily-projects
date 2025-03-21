@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "js,json,ts",
     "ignore": ["node_modules/", ".serverless/"],
-    "exec": "serverless offline"
+    "exec": "serverless offline --httpPort 4000 --lambdaPort 4002 --verbose" 
   }

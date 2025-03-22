@@ -31,38 +31,7 @@ functions:
   hello:
     handler: src/index.handler
     events: 
-    - httpApi:
-        path: /v1
-        method: ANY  # Consider specifying exact methods instead of ANY
-        cors:
-          allowedOrigins:
-            - '*'            # Restrict this in production
-          allowedHeaders:
-            - Content-Type
-            - Authorization 
-          allowedMethods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          maxAge: 3600
-    - http:
-        path: /{proxy+}
-        method: ANY
-        cors:
-          allowedOrigins:
-            - '*'            # Restrict this in production
-          allowedHeaders:
-            - Content-Type
-            - Authorization
-          allowedMethods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          maxAge: 3600  
+    - httpApi: "*"
     timeout: 10
     memorySize: 256
     tags:
@@ -72,6 +41,7 @@ package:
   individually: true
   include:
     - src/views/**
+    - src/views/**/**
     - node_modules/ejs/**
   patterns:
     # Include necessary files

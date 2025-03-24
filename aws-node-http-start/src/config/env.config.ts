@@ -5,7 +5,7 @@ dotenv.config();
 const processENV = process.env;
 
 const envVariables = {
-    NODE_ENV: processENV.NODE_ENV || 'development',
+    NODE_ENV: processENV.NODE_ENV || 'development', 
 }
 
 

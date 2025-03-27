@@ -2,10 +2,10 @@ import morgan from "morgan";
 import envVariables from "./env.config";
 import path from "path";
 
-const { NODE_ENV } = envVariables
+const { STAGE } = envVariables
 
 // Configure Morgan logging format
-const morganFormat = NODE_ENV === 'production'
+const morganFormat = STAGE === 'prod'
   ? 'combined'    // Apache-style logging for production
   : 'dev';   
 

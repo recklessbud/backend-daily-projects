@@ -3,6 +3,7 @@ org: bureck
 # "service" is the name of this project. This will also be added to your AWS resource names.
 app: aws-node-http-start
 service: aws-node-http-start
+useDotenv: true
 
 
 provider:
@@ -24,7 +25,10 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
-    NODE_ENV: ${opt:stage, 'dev'}
+    STAGE: ${env:STAGE, 'dev'}
+    DATABASE_URL: ${env:DATABASE_URL}
+    DIRECT_URL: ${env:DIRECT_URL}
+
 
 
 functions:
@@ -44,15 +48,6 @@ package:
     - src/views/**/**
     - node_modules/ejs/**
   patterns:
-    # Include necessary files
-    - "src/**/*.ts"
-    - "src/**/*.js"
-    - "package.json"
-    - "package-lock.json"
-    - node_modules/ejs/**
-    - src/views/**    
-    
-    # Exclude unnecessary files
     - "!src/**/*.test.ts"
     - "!src/**/*.spec.ts"
     - "!src/**/*.test.js"
@@ -63,19 +58,12 @@ package:
     # - "!node_modules/**
     - "!test/**"
     - "!tests/**"
-    - "!**/*.md"
-    - "!.env*"
-    - "!tsconfig.json"
-    - "!jest.config.js"
-    - "!.eslintrc*"
-    - "!.prettierrc*"
-    - "!.serverless/**"
-  excludeDevDependencies: true
 
 plugins:
   - serverless-offline
   - serverless-static
   - serverless-plugin-static
+  - serverless-dotenv-plugin
 
 custom:
   serverless-offline:
@@ -83,6 +71,10 @@ custom:
     lambdaPort: 4002
     noPrependStageInUrl: true
     reloadHandler: true
+  dotenv:
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
 
   esbuild:
     bundle: true

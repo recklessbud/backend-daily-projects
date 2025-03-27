@@ -1,26 +1,46 @@
-// import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { Pool, neonConfig } from '@neondatabase/serverless';
+import { getSecureDbUrl } from '../utils/secureDbUrl.helper';
 import envVariables from './env.config';
-
 import ws from 'ws';
+
 neonConfig.webSocketConstructor = ws;
 
-// To work in edge environments (Cloudflare Workers, Vercel Edge, etc.), enable querying over fetch
-// neonConfig.poolQueryViaFetch = true
-
-// Type definitions
 declare global {
   var prisma: PrismaClient | undefined
 }
 
-const connectionString = `${process.env.DATABASE_URL}`;
+let prismaInstance: PrismaClient | undefined;
 
-const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool);
-const prisma = global.prisma || new PrismaClient({ adapter });
+async function getPrismaInstance() {
+  if (prismaInstance) return prismaInstance;
 
-if (envVariables.STAGE === 'dev') global.prisma = prisma;
+  try {
+    const urls = await getSecureDbUrl();
+    if (!urls.databaseUrl || !urls.directUrl) {
+        throw new Error('Database URL not found') 
+    };
 
-export default prisma;
+    const connectionString = envVariables.STAGE === "dev" ? urls.directUrl : urls.databaseUrl
+
+    const pool = new Pool({ 
+      connectionString,
+      ssl: true 
+    });
+    
+    const adapter = new PrismaNeon(pool);
+    prismaInstance = new PrismaClient({ adapter });
+
+    if (envVariables.STAGE === 'dev') {
+      global.prisma = prismaInstance;
+    }
+
+    return prismaInstance;
+  } catch (error) {
+    console.error('Failed to initialize Prisma:', error);
+    throw error;
+  }
+}
+
+export default getPrismaInstance;

@@ -6,19 +6,21 @@
   "scripts": {
     "test": "cross-env STAGE=dev jest --verbose --watchAll --coverage",
     "dev": " cross-env STAGE=dev nodemon --stage dev",
-    "start": "serverless deploy --verbose",
+    "deploy:dev": "serverless deploy --stage dev --verbose",
+    "deploy:prod": "serverless deploy --stage prod --verbose",
     "build": "tsc && copyfiles -u 1 \"views/**/*\"  .serverless/build/",
     "debug": "cross-env STAGE=dev SLS_DEBUG=* serverless offline --httpPort 4000 --lambdaPort 4002 --verbose",
-    "remove": "serverless remove --verbose",
+    "remove:dev": "serverless remove --stage dev --verbose",
+    "remove:prod": "serverless remove --stage prod --verbose",
     "prisma:dev": "npx -y dotenv-cli -e .env.dev --npx prisma",
     "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx -y dotenv-cli -e .env.dev -- npx prisma migrate dev",
     "prisma:studio": "npm run prisma:dev studio"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.775.0",
     "@neondatabase/serverless": "^1.0.0",
     "@prisma/adapter-neon": "^6.5.0",
     "@prisma/client": "^6.5.0",
@@ -30,6 +32,8 @@
     "helmet": "^8.1.0",
     "pg": "^8.14.1",
     "serverless-http": "^3.2.0",
+    "tsc": "^2.0.4",
+    "tsx": "^4.19.3",
     "ws": "^8.18.1"
   },
   "devDependencies": {

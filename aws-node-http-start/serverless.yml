@@ -25,10 +25,20 @@ provider:
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
   environment:
-    STAGE: ${env:STAGE, 'dev'}
-    DATABASE_URL: ${env:DATABASE_URL}
-    DIRECT_URL: ${env:DIRECT_URL}
+    STAGE: ${env:STAGE, 'prod'}
 
+  iam:
+    role:
+      name: serverless-ssm-role-${env:STAGE, 'prod'}
+      statements:
+        - Effect: Allow
+          Action:
+            - "ssm:DescribeParameters"
+            - "ssm:GetParameter"
+            - "ssm:GetParameterHistory"
+            - "ssm:GetParametersByPath"
+            - "ssm:GetParameters"
+          Resource: "*"
 
 
 functions:

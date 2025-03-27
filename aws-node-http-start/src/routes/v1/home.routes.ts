@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { homePage } from "../../controller/home.controller";
+import { homePage, postToDb } from "../../controller/home.controller";
 
 const router = Router();
 
 router.get("/", homePage);
+router.post("/", postToDb);
 
 export default router;

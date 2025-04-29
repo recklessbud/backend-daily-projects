@@ -19,11 +19,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+
+
 // error handler
 app.use(errorHandler);
 
 // Routes
-app.use('/api/contacts', contactsRoute);
+app.use('/api/v1', contactsRoute);
 
 
 // listen

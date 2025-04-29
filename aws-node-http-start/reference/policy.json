@@ -7,6 +7,7 @@
                 "cloudformation:List*",
                 "cloudformation:Get*",
                 "cloudformation:ValidateTemplate",
+                "cloudformation:*",
                 "ssm:*"
             ],
             "Resource": [
@@ -24,7 +25,8 @@
                 "cloudformation:CreateChangeSet",
                 "cloudformation:ListChangeSets",
                 "cloudformation:DeleteChangeSet",
-                "cloudformation:ExecuteChangeSet"
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:*"
             ],
             "Resource": [
                 "arn:aws:cloudformation:*:537047323473:stack/serverless-*"
@@ -37,7 +39,9 @@
                 "lambda:List*",
                 "lambda:CreateFunction",
                 "lambda:TagResource",
-                "lambda:UntagResource"
+                "lambda:UntagResource",
+                "lambda:RemovePermission",
+                "lambda:*"
             ],
             "Resource": [
                 "*"
@@ -164,7 +168,8 @@
         {
             "Effect": "Allow",
             "Action": [
-                "iam:PassRole"
+                "iam:PassRole",
+                "iam:*"
             ],
             "Resource": [
                 "arn:aws:iam::537047323473:role/serverless-*"
@@ -178,10 +183,13 @@
                 "iam:TagRole",
                 "iam:PutRolePolicy",
                 "iam:DeleteRolePolicy",
-                "iam:DeleteRole"
+                "iam:DeleteRole",
+                "iam:*"
             ],
             "Resource": [
-                "arn:aws:iam::537047323473:role/serverless-*"
+                "arn:aws:iam::537047323473:role/serverless-*",
+                "arn:aws:iam::537047323473:*"
+
             ]
         },
         {

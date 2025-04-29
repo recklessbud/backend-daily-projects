@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -18,6 +19,8 @@ datasource db {
 
 model Url {
   id String @id @default(uuid())
-  originalUrl String
-  food String?
+  longUrl String
+  shortUrl String @unique
+  createdAt DateTime @default(now())
 }
+

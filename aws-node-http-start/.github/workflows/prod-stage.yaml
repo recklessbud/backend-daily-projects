@@ -22,18 +22,38 @@ jobs:
       with:
         node-version: "20.11"
         cache: 'npm'
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
     - name: Install serverless
       run: npm install -g serverless --legacy-peer-deps
     - name: Authenticate Serverless Framework
       run: echo "SERVERLESS_ACCESS_KEY=${{ secrets.SERVERLESS_ACCESS_KEY }}" >> $GITHUB_ENV
     - name: Install dependencies
       run: npm install --force --legacy-peer-deps
-    - name: Get Database URL
-      run: echo "DATABASE_URL=$(aws ssm get-parameter --name "/serverless-demo/prod/database-url" --with-decryption --query "Parameter.Value" --output text)" >> $GITHUB_ENV
-    - name: Get direct URL
-      run: echo "DIRECT_URL=$(aws ssm get-parameter --name "/serverless-demo/prod/direct-url" --with-decryption --query "Parameter.Value" --output text)" >> $GITHUB_ENV   
-    - name: Run migrations
-      run: | 
-        npx prisma migrate deploy
+    - name: Get Database URL from ssm
+      run: |
+        DIRECT_URL=$(aws ssm get-parameters --name "/serverless-demo/prod/direct-url" --with-decryption --query "Parameters[0].Value" --output text)
+        echo "DIRECT_URL=$DIRECT_URL" >> $GITHUB_ENV
+    - name: Use the direct url
+      run: |
+        echo "DIRECT_URL:${{ env.DIRECT_URL }}"
+    - name: Get Database URL from ssm
+      run: |
+        DATABASE_URL=$(aws ssm get-parameters --name "/serverless-demo/prod/database-url" --with-decryption --query "Parameter[0].Value"  --output text)
+        echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+    - name: Use the database url
+      run: |
+        echo "DATABASE_URL:${{ env.DATABASE_URL }}"
+    - name: Run Migrations
+      run: |
+        npx prisma generate
+        npx prisma migrate dev
+    - name: serverless package
+      run: |
+        npm run package:prod
     - name: Deploy
       run: npm run deploy:prod

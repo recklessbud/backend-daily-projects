@@ -5,59 +5,91 @@ app: aws-node-http-start
 service: aws-node-http-start
 useDotenv: true
 
-
 provider:
   name: aws
   runtime: nodejs20.x
   stage: dev
-  region: us-east-1
+  region: eu-north-1
   tracing:
     apiGateway: true
     lambda: true
   memorySize: 512
-  timeout: 20
+  timeout: 100
   httpApi:
     cors: true
-    binaryMediaTypes:
-      - "*/*"
   apiGateway:
     metrics: true
     shouldStartNameWithService: true
     minimumCompressionSize: 1024
+  logRetentionInDays: ${self:custom.logRetentionInDays}
+  deploymentBucket:
+    blockPublicAccess: true
+    versioning: true
   environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
     STAGE: ${env:STAGE, 'prod'}
+    ELASTICACHE_REDIS_URL: ${env:ELASTICACHE_REDIS_URL}
+    DATABASE_URL: ${env:DATABASE_URL}
+    DIRECT_URL: ${env:DIRECT_URL}
+
+    
 
   iam:
     role:
-      name: serverless-ssm-role-${env:STAGE, 'prod'}
+      name:  ${self:service}-lambda-role-${env:STAGE, 'prod'}
       statements:
         - Effect: Allow
-          Action:
-            - "ssm:DescribeParameters"
-            - "ssm:GetParameter"
-            - "ssm:GetParameterHistory"
-            - "ssm:GetParametersByPath"
-            - "ssm:GetParameters"
+          Action: '*'
+            # - "ssm:DescribeParameters"
+            # - "ssm:GetParameter"
+            # - "ssm:GetParameterHistory"
+            # - "ssm:GetParametersByPath"
+            # - "ssm:GetParameters"
+            # - "ec2:DescribeRegions"	
+            # - "ec2:CreateNetworkInterface"
+            # - "ec2:DeleteNetworkInterface"
+            # - "ec2:DescribeNetworkInterfaces"
+            # - "logs:CreateLogGroup"
+            # - "logs:CreateLogStream"
+            # - "logs:PutLogEvents"
+            # - "xray:PutTraceSegments"
+            # - "xray:PutTelemetryRecords"
+            # - "elasticache:DescribeCacheClusters"
+            # - "elasticache:DescribeCacheSubnets"
+            # - "elasticache:DescribeReplicationGroups"
           Resource: "*"
+  vpc:
+    securityGroupIds:
+      - sg-0348373743ecb603b
 
+    subnetIds:
+      - subnet-0a90fae6560d3dc7d
+      - subnet-0acdb800668e52b2c
+      - subnet-0f62bffda0c041baa
+      - subnet-05307c7b1ae71e852
 
 functions:
   hello:
     handler: src/index.handler
     events: 
     - httpApi: "*"
-    timeout: 10
+    timeout: 100
     memorySize: 256
+    environment:
+      ELASTICACHE_REDIS_URL: ${env:ELASTICACHE_REDIS_URL}
+      DATABASE_URL: ${env:DATABASE_URL}
+      DIRECT_URL: ${env:DIRECT_URL}
+
     tags:
       Function: hello
 
 package:
-  individually: true
-  include:
-    - src/views/**
-    - src/views/**/**
-    - node_modules/ejs/**
   patterns:
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
+    - '!node_modules/.cache/prisma/**' 
     - "!src/**/*.test.ts"
     - "!src/**/*.spec.ts"
     - "!src/**/*.test.js"
@@ -68,6 +100,18 @@ package:
     # - "!node_modules/**
     - "!test/**"
     - "!tests/**"
+    - "src/views/**"
+    - "node_modules/ejs/**"
+    - "src/views/**/*.ejs"
+    - "src/views/*/**"
+    # - "node_modules/ajv/**"
+    # - "node_modules/json-schema-traverse/**"
+    # - "node_modules/fast-deep-equal/**"
+    # - "node_modules/uri-js/**"
+    # - "node_modules/ioredis/**"
+    # - "!node_modules/**/*.md"
+    # - "!node_modules/**/*.txt"
+    # - "!node_modules/**/*.map"
 
 plugins:
   - serverless-offline
@@ -76,6 +120,10 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  logRetentionInDays: 14
+  prune: 
+    automatic: true
+    number: 3
   serverless-offline:
     httpPort: 4000
     lambdaPort: 4002
@@ -95,5 +143,3 @@ custom:
     target: node20
     platform: node
     concurrency: 10
-
-

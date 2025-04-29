@@ -30,9 +30,8 @@ app.use(morganFormats);
  
  
 //routes
-app.use('/v1', HomeRoutes)
+app.use('/', HomeRoutes)
 app.use('/v1/other', OtherPages)
-
 
 
 

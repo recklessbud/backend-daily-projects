@@ -29,7 +29,7 @@ async function getPrismaInstance() {
       ssl: true 
     });
     
-    const adapter = new PrismaNeon(pool);
+    const adapter = new PrismaNeon(pool as any);
     prismaInstance = new PrismaClient({ adapter });
 
     if (envVariables.STAGE === 'dev') {

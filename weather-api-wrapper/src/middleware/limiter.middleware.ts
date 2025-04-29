@@ -4,7 +4,7 @@ import rateLimit from "express-rate-limit";
 
 export const weatherRateLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, 
-    max: 3,
+    max: 5,
     message: "Too many weather requests. Try again in a minute.",
     standardHeaders: true,
     legacyHeaders: false,

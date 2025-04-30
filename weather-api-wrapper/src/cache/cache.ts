@@ -15,7 +15,7 @@ export const cache = async(city: string): Promise<any> => {
     await redis.set(weatherKey, JSON.stringify(data), "EX", Number(envVariables.CACHE_TTL));
     return data
   } catch (error) {
-    console.error("Error caching data:", error);
+    //console.error("Error caching data:", error);
     throw new Error("Error caching data");
     
   }

@@ -1,7 +1,7 @@
 import {Redis} from "ioredis";
 
 export const redisClient = new Redis({
-    host: process.env.REDIS_HOST || 'localhost',
+    host: process.env.REDIS_HOST || 'redis',
     port: Number(process.env.REDIS_PORT || 6379),
     // password: String(process.env.REDIS_PASSWORD),
     maxRetriesPerRequest: 3

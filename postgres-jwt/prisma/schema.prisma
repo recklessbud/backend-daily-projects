@@ -51,7 +51,7 @@ model User {
   studentsProjects Project[] @relation("StudentProjects")
   supervisorProjects Project[] @relation("SupervisorProjects")
   schoolId String?
-  supervisorId String?
+  supervisorId String? 
   studentsTopic ProjectTopic[] @relation("StudentsTopic")
   supervisor User? @relation("SuperVisorStudents", fields: [supervisorId], references: [id])
   students User[] @relation("SuperVisorStudents")
